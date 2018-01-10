@@ -17,12 +17,15 @@ namespace dc
 
             Log.Info("开启时间(" + DateTime.Now.ToString() + ")");
             ServerConfig.Load();
+            Console.Title = "HttpServer";
 
             DatabaseManager.Instance.Setup();
+            HttpServerManager.Instance.Setup();
         }
         public void Destroy()
         {
             DatabaseManager.Instance.Destroy();
+            HttpServerManager.Instance.Destroy();
 
             Log.Info("服务器关闭");
         }
@@ -34,6 +37,7 @@ namespace dc
         public void Start()
         {
             DatabaseManager.Instance.Start();
+            HttpServerManager.Instance.Start();
         }
     }
 }

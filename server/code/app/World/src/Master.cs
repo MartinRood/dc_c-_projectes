@@ -15,7 +15,7 @@ namespace dc
             //初始化日志，放最前面
             Log4Helper.Init(log4net.LogManager.GetLogger("loginfo"), log4net.LogManager.GetLogger("loginfo"), log4net.LogManager.GetLogger("logerror"), log4net.LogManager.GetLogger("logerror"));
 
-            Log.Info("开启时间(" + DateTime.Now.ToString()+")");
+            Log.Info("开启时间(" + DateTime.Now.ToString() + ")");
             ServerConfig.Load();
             Console.Title = "WS:" + ServerConfig.net_info.server_uid;
 
