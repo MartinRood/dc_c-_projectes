@@ -31,7 +31,7 @@ namespace dc
         }
         public void Tick()
         {
-
+            HttpServerManager.Instance.Tick();
         }
 
         public void Start()

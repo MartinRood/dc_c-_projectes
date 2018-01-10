@@ -89,7 +89,7 @@ namespace dc
                     {
                         using (var reader = new StreamReader(httpListenerContext.Request.InputStream, System.Text.Encoding.UTF8))
                         {
-                            var content = reader.ReadToEnd();
+                            string content = reader.ReadToEnd();
                             Console.WriteLine(content);
                             m_request_args.ParsePostRequest(content);
                         }
