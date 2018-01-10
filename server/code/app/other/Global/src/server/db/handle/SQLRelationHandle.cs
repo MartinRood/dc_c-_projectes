@@ -21,7 +21,7 @@ namespace dc
             bool ret = false;
             ByteArray by = DBUtils.AllocDBArray();
             string sql = "call SP_RELATION_GET(" + char_idx + ")";
-            DBManager.Instance.GetDB(eDBType.Center, 0).Query(sql, (reader) =>
+            DBManager.Instance.GetDB(eDBType.Center).Query(sql, (reader) =>
             {
                 if (reader.HasRows && reader.Read())
                 {
@@ -43,7 +43,7 @@ namespace dc
             if(by.Available == 0)
             {
                 string sql = "delete from `relation` where char_idx = " + char_idx + ";";
-                DBManager.Instance.GetDB(eDBType.Center, 0).Execute(sql); 
+                DBManager.Instance.GetDB(eDBType.Center).Execute(sql); 
             }
             else
             {
@@ -56,7 +56,7 @@ namespace dc
                 List<MySqlParameter> param = new List<MySqlParameter>();
                 MySqlParameter p = Database.MakeMysqlParam("@bin_relation", MySqlDbType.Blob, by.GetBuffer(), by.Available);
                 param.Add(p);
-                DBManager.Instance.GetDB(eDBType.Center, 0).Execute(sql, param);
+                DBManager.Instance.GetDB(eDBType.Center).Execute(sql, param);
             }
         }
         #endregion
@@ -79,7 +79,7 @@ namespace dc
             List<MySqlParameter> param = new List<MySqlParameter>();
             MySqlParameter p = Database.MakeMysqlParam("@i_bin_content", MySqlDbType.Blob, by.GetBuffer(), by.Available);
             param.Add(p);
-            DBManager.Instance.GetDB(eDBType.Center, 0).Execute(sql, param);
+            DBManager.Instance.GetDB(eDBType.Center).Execute(sql, param);
         }
         /// <summary>
         /// 删除关系事件
@@ -87,7 +87,7 @@ namespace dc
         public static void RemoveRelationEvent(long event_idx)
         {
             string sql = "call SP_RELATION_EVENT_DELETE(" + event_idx + ")";
-            DBManager.Instance.GetDB(eDBType.Center, 0).Execute(sql);
+            DBManager.Instance.GetDB(eDBType.Center).Execute(sql);
         }
         /// <summary>
         /// 查询关系信息
@@ -97,7 +97,7 @@ namespace dc
             List<RelationEventInfo> list = new List<RelationEventInfo>();
             ByteArray by = DBUtils.AllocDBArray();
             string sql = "call SP_RELATION_EVENT_LOAD(" + char_idx + ")";
-            DBManager.Instance.GetDB(eDBType.Center, 0).Query(sql, (reader) =>
+            DBManager.Instance.GetDB(eDBType.Center).Query(sql, (reader) =>
             {
                 if (reader.HasRows)
                 {
@@ -127,7 +127,7 @@ namespace dc
         public static void QueryExistsRelationEvent(long char_idx, long target_char_idx, eRelationFlag flag, Action<long> callback)
         {
             string sql = "call SP_RELATION_EVENT_CHECK(" + target_char_idx + "," + char_idx + "," + (byte)flag + ")";
-            DBManager.Instance.GetDB(eDBType.Center, 0).Query(sql, (reader) =>
+            DBManager.Instance.GetDB(eDBType.Center).Query(sql, (reader) =>
             {
                 long event_idx = 0;
                 if (reader.HasRows && reader.Read())

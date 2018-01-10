@@ -56,5 +56,12 @@ namespace dc
                 return db;
             return null;
         }
+        public Database GetDB(eDBType type)
+        {
+            Database db;
+            if (m_db_instance.TryGetValue((int)type + "_0", out db))
+                return db;
+            return null;
+        }
     }
 }

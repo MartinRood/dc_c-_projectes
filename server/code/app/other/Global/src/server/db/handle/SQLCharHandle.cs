@@ -19,7 +19,7 @@ namespace dc
         {
             List<long> list = new List<long>();
             string sql = "call SP_CHARACTER_FOR_PRELOAD";
-            DBManager.Instance.GetDB(eDBType.Center, 0).Query(sql, (reader) =>
+            DBManager.Instance.GetDB(eDBType.Center).Query(sql, (reader) =>
             {
                 if (reader.HasRows)
                 {
@@ -41,7 +41,7 @@ namespace dc
         {
             bool ret = false;
             string sql = "call SP_CHARACTER_BASE(" + char_idx + ")";
-            DBManager.Instance.GetDB(eDBType.Center, 0).Query(sql, (reader) =>
+            DBManager.Instance.GetDB(eDBType.Center).Query(sql, (reader) =>
             {
                 if (reader.HasRows && reader.Read())
                 {
@@ -92,7 +92,7 @@ namespace dc
                 info.vip_grade + "," +
                 "now());"
                 );
-            DBManager.Instance.GetDB(eDBType.Center, 0).Execute(sql);
+            DBManager.Instance.GetDB(eDBType.Center).Execute(sql);
         }
     }
 }

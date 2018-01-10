@@ -21,7 +21,7 @@ namespace dc
         public static void QueryAccountData(string username, Action<AccountData> callback)
         {
             string sql = "call SP_GET_ACCOUNT_LOGINDATA('" + username + "')";
-            DBManager.Instance.GetDB(eDBType.Member, 0).Query(sql, (reader) =>
+            DBManager.Instance.GetDB(eDBType.Member).Query(sql, (reader) =>
             {
                 AccountData data = new AccountData();
                 if (reader.HasRows && reader.Read())
@@ -46,7 +46,7 @@ namespace dc
         public static void QueryLoginStatus(long account_idx, Action<eLoginResult> callback)
         {
 	        string sql = "call SP_LOGIN_ACCOUNT(" + account_idx + "," + 1 + ")";
-            DBManager.Instance.GetDB(eDBType.Member, 0).Query(sql, (reader) =>
+            DBManager.Instance.GetDB(eDBType.Member).Query(sql, (reader) =>
                 {
                     eLoginResult login_ret = eLoginResult.E_FAILED_UNKNOWNERROR;
                     if (reader.HasRows && reader.Read())
@@ -75,7 +75,7 @@ namespace dc
         public static void LoginOut(long account_idx)
         {
             string sql = "call SP_LOGOUT_ACCOUNT(" + account_idx + ")";
-            DBManager.Instance.GetDB(eDBType.Member, 0).Execute(sql);
+            DBManager.Instance.GetDB(eDBType.Member).Execute(sql);
         }
     }
 }

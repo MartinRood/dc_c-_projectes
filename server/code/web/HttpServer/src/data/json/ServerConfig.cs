@@ -3,19 +3,22 @@ using System.Collections.Generic;
 
 namespace dc
 {
+    /// <summary>
+    /// 服务器配置
+    /// @author hannibal
+    /// @time 2016-8-1
+    /// </summary>
     public class ServerConfig
     {
-        public static ServerNetInfo info;
+        public static ServerConfigInfo info;
         public static bool Load()
         {
-            if (JsonFile.Read<ServerNetInfo>("./bin_modify.json", ref info))
-                return true;
-            else 
-                return false;
+            bool ret_net = JsonFile.Read<ServerConfigInfo>("./http_server.json", ref info);
+            return ret_net;
         }
     }
 
-    public class ServerNetInfo
+    public class ServerConfigInfo
     {
         public class DBItems
         {
@@ -26,13 +29,8 @@ namespace dc
             public string username;
             public string password;
         }
-        public class FieldItems
-        {
-            public string name;
-            public string fields;
-            public int fixed_length;
-        }
+        public int log_level;
+        public ushort port_for_server;//监听端口
         public List<DBItems> db_list = new List<DBItems>();//数据库列表
-        public List<FieldItems> field_list = new List<FieldItems>();//配置字段
     }
 }

@@ -54,6 +54,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="src\data\idmap\HttpID.cs" />
+    <Compile Include="src\data\info\RequestInfo.cs" />
+    <Compile Include="src\http\HttpRequestArgs.cs" />
     <Compile Include="src\ServerMain.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="src\data\idmap\GlobalID.cs" />

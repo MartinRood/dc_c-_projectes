@@ -12,7 +12,7 @@ namespace dc
     /// </summary>
     public class DatabaseManager : Singleton<DatabaseManager>
     {
-        private Database[] m_db_instance = new Database[(int)eDBType.Max];
+        private Dictionary<ushort, Database> m_db_instance = new Dictionary<ushort, Database>();
 
         public void Setup()
         {
@@ -20,14 +20,11 @@ namespace dc
         }
         public void Destroy()
         {
-            for (int i = 0; i < (int)eDBType.Max; ++i)
+            foreach(var obj in m_db_instance)
             {
-                if(m_db_instance[i] != null)
-                {
-                    m_db_instance[i].Close();
-                    m_db_instance[i] = null;
-                }
+                obj.Value.Close();
             }
+            m_db_instance.Clear();
         }
         public void Tick()
         {
@@ -41,23 +38,23 @@ namespace dc
                 OpenDB(db_info);
             }
         }
-        private void OpenDB(ServerNetInfo.DBItems db_info)
+        private void OpenDB(ServerConfigInfo.DBItems db_info)
         {
             string conn_str = "Database='" + db_info.name + "';Data Source='" + db_info.address + "';User Id='" + db_info.username + "';Password='" + db_info.password + "';charset='utf8';pooling=true";
             Database db = new Database();
             db.Open(conn_str, db_info.name);
             m_db_instance[db_info.id] = db;
         }
-        public Database GetDB(eDBType type) 
+        public Database GetDB(ushort id) 
         {
-            return m_db_instance[(int)type];
+            return m_db_instance[id];
         }
         /// <summary>
         /// 获取数据库表列表
         /// </summary>
-        public System.Data.DataTable GetTables(eDBType type)
+        public System.Data.DataTable GetTables(ushort id)
         {
-            Database db = GetDB(type);
+            Database db = GetDB(id);
             if (db == null) return null;
 
             return db.GetTables();
@@ -65,9 +62,9 @@ namespace dc
         /// <summary>
         /// 获取表字段列表
         /// </summary>
-        public Dictionary<string, Type> GetFields(eDBType type, string table_name)
+        public Dictionary<string, Type> GetFields(ushort id, string table_name)
         {
-            Database db = GetDB(type);
+            Database db = GetDB(id);
             if (db == null) return null;
 
             Dictionary<string, Type> ret_list = null;
