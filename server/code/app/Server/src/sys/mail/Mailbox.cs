@@ -311,6 +311,13 @@ namespace dc
             mail_info.bin_mail_content.bin_normal_content.content = info.content;
             SQLMailHandle.CreateMail(mail_info, player.db_id);
             CommonObjectPools.Despawn(mail_info);
+
+            //告诉客户端发送成功
+            ss2c.MailCommand msg_client = PacketPools.Get(ss2c.msg.MAIL_COMMAND) as ss2c.MailCommand;
+            msg_client.mail_idx = 0;
+            msg_client.command_type = eMailCommandType.WRITE_MAIL;
+            msg_client.error_type = eMailCommandError.NONE;
+            ServerNetManager.Instance.SendProxy(player.client_uid, msg_client);
         }
         /// <summary>
         /// 领取附件
@@ -331,6 +338,8 @@ namespace dc
                     mail_info.flags = Utils.InsertFlag(mail_info.flags, (uint)eMailFlags.READED);
                     mail_info.flags = Utils.RemoveFlag(mail_info.flags, (uint)eMailFlags.CARRY_ITEM);
                     m_is_dirty = true;
+
+                    //TODO:玩家收取附件
                 }
             }
         }

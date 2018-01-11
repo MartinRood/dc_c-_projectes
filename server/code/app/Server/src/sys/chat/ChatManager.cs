@@ -123,7 +123,7 @@ namespace dc
                     break;
 
                 case eChatType.WORLD://世界聊天
-                    {
+                    {//广播消息
                         ss2c.ChatRecv msg = PacketPools.Get(ss2c.msg.CHAT_RECV) as ss2c.ChatRecv;
                         msg.type = type;
                         msg.sender.Set(player.char_idx, player.char_name);
@@ -133,7 +133,8 @@ namespace dc
                     break;
 
                 case eChatType.CURRENT://当前聊天
-
+                    { 
+                    }
                     break;
 
                 case eChatType.GROUP://组队聊天
