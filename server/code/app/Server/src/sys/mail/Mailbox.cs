@@ -59,6 +59,7 @@ namespace dc
 
             SQLMailHandle.LoadCharRecvs(m_char_idx, player.db_id, (info) =>
             {
+                if (m_char_idx == 0) return;
                 m_had_recv_mails = info;
                 SQLMailHandle.LoadMailList(m_char_idx, player.spid, player.db_id, OnLoadMailEnd);
             });
@@ -162,7 +163,7 @@ namespace dc
         /// <returns></returns>
         public bool NeedSave()
         {
-            if (m_is_dirty && Time.timeSinceStartup - m_last_save_time > 1000 * 5)//5分钟保存一次
+            if (m_is_dirty && Time.timeSinceStartup - m_last_save_time > 1000 * GlobalID.SAVE_MAIL_TIME_OFFSET)//5分钟保存一次
                 return true;
             return false;
         }
@@ -177,11 +178,13 @@ namespace dc
             {
                 return;
             }
-            if(m_new_mails.Count > 0)
-            {
+            while(m_new_mails.Count > 0)
+            {//数量太多，分次数发送
                 ss2c.MailList msg = PacketPools.Get(ss2c.msg.MAIL_LIST) as ss2c.MailList;
-                foreach (var mail_idx in m_new_mails)
+                int count = 0;
+                for (int i = m_new_mails.Count - 1; i >= 0 && count++ < 10; --i)
                 {
+                    long mail_idx = m_new_mails[i];
                     MailInfo mail_info;
                     if (m_all_mails.TryGetValue(mail_idx, out mail_info))
                     {
@@ -189,10 +192,11 @@ namespace dc
                         info.CopyFromInfo(mail_info);
                         msg.mail_list.Add(info);
                     }
+                    m_new_mails.RemoveAt(i);
                 }
                 ServerNetManager.Instance.SendProxy(player.client_uid, msg);
-                m_new_mails.Clear();
             }
+            m_new_mails.Clear();
         }
         /// <summary>
         /// 读邮件
@@ -244,7 +248,7 @@ namespace dc
             {
                 if (String.IsNullOrEmpty(info.receiver.char_name))
                 {
-                    Log.Warning("错误的收件人name:" + info.receiver.char_name);
+                    Log.Debug("错误的收件人name:" + info.receiver.char_name);
                     return;
                 }
                 Player recv_player = UnitManager.Instance.GetPlayerByName(info.receiver.char_name);
@@ -259,11 +263,19 @@ namespace dc
                     if (player == null)
                         return;
                     SQLCharHandle.QueryCharacterInfoByName(info.receiver.char_name, player.db_id, (ret, data) =>
-                    {
+                    {//收件人必须是在同一个数据库
                         if(ret && m_char_idx > 0)
                         {
                             info.receiver.char_idx = data.char_idx;
                             ProcessWrite(info);
+                        }
+                        else
+                        {//告诉客户端发送失败
+                            ss2c.MailCommand msg_client = PacketPools.Get(ss2c.msg.MAIL_COMMAND) as ss2c.MailCommand;
+                            msg_client.mail_idx = 0;
+                            msg_client.command_type = eMailCommandType.WRITE_MAIL;
+                            msg_client.error_type = eMailCommandError.RECIPIENT_NOT_FOUND;
+                            ServerNetManager.Instance.SendProxy(player.client_uid, msg_client);
                         }
                     });
                 }
@@ -279,7 +291,7 @@ namespace dc
 
             if (info.receiver.char_idx == 0)
             {
-                Log.Warning("错误的收件人id:" + info.receiver.char_idx);
+                Log.Debug("错误的收件人id:" + info.receiver.char_idx);
                 return;
             }
 
@@ -339,7 +351,7 @@ namespace dc
                 if (!m_all_mails.TryGetValue(mail_idx, out mail_info)) continue;
 
                 if (m_del_mails.Contains(mail_idx)) continue;
-                if (mail_info.receiver_idx == 0) continue;
+                if (mail_info.receiver_idx == 0) continue;//群发邮件不能删
 
                 // 告诉客户端
                 if (mail_info.mail_type != eMailType.SYSTEM_INTERNAL)

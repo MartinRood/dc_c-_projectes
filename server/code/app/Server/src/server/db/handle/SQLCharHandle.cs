@@ -135,7 +135,7 @@ namespace dc
                 }
                 else
                 {
-                    Log.Warning("根据名称查询角色失败:" + char_name);
+                    Log.Debug("根据名称查询角色失败:" + char_name);
                 }
                 callback(ret, data);
             });

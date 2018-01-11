@@ -440,7 +440,7 @@ namespace dc.ss2c
     /// </summary>
     public class MailCommand : PackBaseS2C
     {
-        public long mail_idx;
+        public long mail_idx = 0;
         public eMailCommandType command_type;
         public eMailCommandError error_type;
 

@@ -40,7 +40,6 @@ namespace dc
         protected override void RegisterHandle()
         {
             RegisterMsgProc(ss2gs.msg.PROXY_SS_MSG, HandleReqProxyMsgToClient);
-            RegisterMsgProc(ss2gs.msg.CREATE_CHARACTER, OnCreateCharacter);
             RegisterMsgProc(ss2gs.msg.REQ_KICK_ACCOUNT, OnReqKickAccount);
             RegisterMsgProc(ss2gs.msg.ENTER_GAME, OnEnterGame);
             RegisterMsgProc(ss2gs.msg.ROBOT_TEST, OnRobotTest);
@@ -80,18 +79,6 @@ namespace dc
             {
                 ForClientNetManager.Instance.SendProxy(tmp_client_uid.conn_idx, header, proxy_msg.data);
             }
-        }
-        /// <summary>
-        /// 创建角色
-        /// </summary>
-        private void OnCreateCharacter(PacketBase packet)
-        {
-            ss2gs.CreateCharacter msg = packet as ss2gs.CreateCharacter;
-
-            gs2c.CreateCharacter rep_msg = PacketPools.Get(gs2c.msg.CREATE_CHARACTER) as gs2c.CreateCharacter;
-            rep_msg.result = msg.result;
-            rep_msg.char_idx = msg.char_idx;
-            ForClientNetManager.Instance.Send(msg.client_uid.conn_idx, rep_msg);
         }
         /// <summary>
         /// 踢号

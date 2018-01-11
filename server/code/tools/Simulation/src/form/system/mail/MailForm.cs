@@ -29,6 +29,7 @@ namespace dc
             {
                 m_list_mail.Rows.Add(obj.mail_idx, obj.mail_type.ToString(), obj.sender_name, obj.flags, obj.subject);
             }
+            m_comb_name_type.SelectedIndex = 0;
         }
         protected override void OnClosed(EventArgs e)
         {
@@ -42,9 +43,14 @@ namespace dc
         private void OnBtnOK(object sender, EventArgs e)
         {
             MailWriteInfo info = new MailWriteInfo();
-            //info.receiver_type = MailWriteInfo.eReceiverType.CHARID;
-            //info.receiver_idx = long.Parse(m_txt_recv.Text);
-            info.receiver.SetName(m_txt_recv.Text);
+            if(m_comb_name_type.SelectedIndex == 0)
+            {
+                info.receiver.SetIdx(long.Parse(m_txt_recv.Text));
+            }
+            else
+            {
+                info.receiver.SetName(m_txt_recv.Text);
+            }
             info.subject = m_txt_subject.Text;
             info.content = m_txt_content.Text;
             ServerMsgSend.SendWriteMail(info);

@@ -27,7 +27,6 @@ namespace dc
             foreach (var obj in m_mailboxs)
             {
                 obj.Value.Destroy();
-                CommonObjectPools.Despawn(obj.Value);
             }
             m_mailboxs.Clear();
         }
@@ -83,7 +82,7 @@ namespace dc
             Mailbox mail_box;
             if (!m_mailboxs.TryGetValue(char_idx, out mail_box))
             {
-                mail_box = CommonObjectPools.Spawn<Mailbox>();
+                mail_box = new Mailbox();
                 mail_box.Setup(char_idx);
                 m_mailboxs.Add(char_idx, mail_box);
             }
@@ -97,7 +96,6 @@ namespace dc
             if (m_mailboxs.TryGetValue(char_idx, out mail_box))
             {
                 mail_box.Destroy();
-                CommonObjectPools.Despawn(mail_box);
             }
             m_mailboxs.Remove(char_idx);
         }

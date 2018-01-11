@@ -195,7 +195,7 @@ namespace dc
         /// </summary>
         private void SysMailToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            ChatForm mail_form = new ChatForm();
+            MailForm mail_form = new MailForm();
             mail_form.ShowDialog(this);
         }
 

@@ -1,5 +1,5 @@
 {
-	"console":1,
+	"console":0,
     "net_server_ip":"127.0.0.1",
 	"net_server_port":7000,
 	"net_client_count":1000,

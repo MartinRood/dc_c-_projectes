@@ -44,6 +44,7 @@
             this.Subject = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Read = new System.Windows.Forms.DataGridViewButtonColumn();
             this.Remove = new System.Windows.Forms.DataGridViewButtonColumn();
+            this.m_comb_name_type = new System.Windows.Forms.ComboBox();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.m_list_mail)).BeginInit();
             this.SuspendLayout();
@@ -52,7 +53,7 @@
             // 
             this.m_txt_subject.Location = new System.Drawing.Point(48, 14);
             this.m_txt_subject.Name = "m_txt_subject";
-            this.m_txt_subject.Size = new System.Drawing.Size(280, 21);
+            this.m_txt_subject.Size = new System.Drawing.Size(176, 21);
             this.m_txt_subject.TabIndex = 7;
             // 
             // label3
@@ -67,7 +68,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(334, 17);
+            this.label4.Location = new System.Drawing.Point(246, 17);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(47, 12);
             this.label4.TabIndex = 8;
@@ -92,6 +93,7 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.m_comb_name_type);
             this.groupBox1.Controls.Add(this.m_btn_ok);
             this.groupBox1.Controls.Add(this.m_txt_recv);
             this.groupBox1.Controls.Add(this.label4);
@@ -108,7 +110,7 @@
             // 
             // m_btn_ok
             // 
-            this.m_btn_ok.Font = new System.Drawing.Font("SimSun", 14F);
+            this.m_btn_ok.Font = new System.Drawing.Font("宋体", 14F);
             this.m_btn_ok.Location = new System.Drawing.Point(511, 14);
             this.m_btn_ok.Name = "m_btn_ok";
             this.m_btn_ok.Size = new System.Drawing.Size(62, 108);
@@ -204,6 +206,18 @@
             this.Remove.UseColumnTextForButtonValue = true;
             this.Remove.Width = 50;
             // 
+            // m_comb_name_type
+            // 
+            this.m_comb_name_type.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.m_comb_name_type.FormattingEnabled = true;
+            this.m_comb_name_type.Items.AddRange(new object[] {
+            "Id",
+            "名称"});
+            this.m_comb_name_type.Location = new System.Drawing.Point(298, 14);
+            this.m_comb_name_type.Name = "m_comb_name_type";
+            this.m_comb_name_type.Size = new System.Drawing.Size(77, 20);
+            this.m_comb_name_type.TabIndex = 15;
+            // 
             // MailForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -243,6 +257,7 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn Subject;
         private System.Windows.Forms.DataGridViewButtonColumn Read;
         private System.Windows.Forms.DataGridViewButtonColumn Remove;
+        private System.Windows.Forms.ComboBox m_comb_name_type;
 
     }
 }

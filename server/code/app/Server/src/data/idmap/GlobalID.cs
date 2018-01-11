@@ -10,6 +10,11 @@ namespace dc
         /// </summary>
         public static int UPLOAD_ONLINE_COUNT_TIME = 60 * 1;
 
+        /// <summary>
+        /// 多长时间保存一次游戏数据(单位：秒)
+        /// </summary>
+        public static int SAVE_MAIL_TIME_OFFSET = 60 * 5;
+
         ///// <summary>
         ///// 多长时间自动连接战斗服(单位：秒)
         ///// 战斗服宕机后，玩家会自动连接其他战斗服
