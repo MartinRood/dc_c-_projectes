@@ -9,10 +9,9 @@
 </head>
 <body>
     <form id="form1" runat="server">
-    <div>
-    
-    </div>
-        <asp:Button ID="Button1" runat="server" OnClick="Button1_Click" Text="Button" />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <asp:Label ID="LabelLogin" runat="server" Text="登录"></asp:Label>
+        <br />
     </form>
 </body>
 </html>
