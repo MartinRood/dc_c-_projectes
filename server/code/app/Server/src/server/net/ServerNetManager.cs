@@ -201,6 +201,9 @@ namespace dc
                                 case inner.msg.APPSERVER_SHUTDOWN:
                                     Master.Instance.Stop();
                                     break;
+                                case inner.msg.SERVER_START_COUNT:
+                                    IdSharedManager.Instance.InitServerStartCount((packet as inner.ServerStartCount).count);
+                                    break;
                             }
                         }
                     }

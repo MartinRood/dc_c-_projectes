@@ -111,17 +111,18 @@ namespace dc
             });
         }
         /// <summary>
-        /// 查询操作：同步执行
+        /// 查询操作：同步执行，少用
         /// </summary>
         /// <param name="sql"></param>
         /// <param name="callback"></param>
-        public void QuerySync(string sql, Action<MySqlDataReader> callback)
+        public bool QuerySync(string sql, Action<MySqlDataReader> callback)
         {
             if (!IsOpen())
             {
                 Log.Warning("连接已经关闭，执行语句:" + sql);
-                return;
+                return false;
             }
+            if (m_IsExecing) return false;
             //Log.Debug("[db]:QuerySync:" + sql);
             try
             {
@@ -129,10 +130,12 @@ namespace dc
                 {
                     if (callback != null) callback(reader);
                 }
+                return true;
             }
             catch (Exception e)
             {
                 Log.Exception(e);
+                return false;
             }
         }
         /// <summary>

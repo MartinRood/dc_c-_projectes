@@ -12,6 +12,7 @@ namespace dc.inner
         public const ushort APPSERVER_ADD = Begin + 4;
         public const ushort APPSERVER_REMOVE = Begin + 5;
         public const ushort APPSERVER_SHUTDOWN = Begin + 6;
+        public const ushort SERVER_START_COUNT = Begin + 7;
 
         public static void RegisterPools()
         {
@@ -22,6 +23,7 @@ namespace dc.inner
             PacketPools.Register(APPSERVER_ADD, "inner.AppServerAdd");
             PacketPools.Register(APPSERVER_REMOVE, "inner.AppServerRemove");
             PacketPools.Register(APPSERVER_SHUTDOWN, "inner.AppServerShutdown");
+            PacketPools.Register(SERVER_START_COUNT, "inner.ServerStartCount");
         }
     }
     public class ReqLogin : PacketBase
@@ -148,6 +150,26 @@ namespace dc.inner
         public override void Write(ByteArray by)
         {
             base.Write(by);
+        }
+    }
+    /// <summary>
+    /// 服务器启动次数
+    /// </summary>
+    public class ServerStartCount : PacketBase
+    {
+        public int count;
+        public ServerStartCount()//msg.APPSERVER_REMOVE
+        {
+        }
+        public override void Read(ByteArray by)
+        {
+            base.Read(by);
+            count = by.ReadInt();
+        }
+        public override void Write(ByteArray by)
+        {
+            base.Write(by);
+            by.WriteInt(count);
         }
     }
 }

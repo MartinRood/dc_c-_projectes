@@ -21,7 +21,7 @@ namespace dc
         {
             string sql = "select count(*), max(char_index) from `character` where ws_id = " + ws_id;
             long max_id = 0;//从这个开始
-            DBManager.Instance.GetDB(eDBType.Game, db_id.game_id).Query(sql, (reader) =>
+            DBManager.Instance.GetDB(eDBType.Game, db_id.game_id).QuerySync(sql, (reader) =>
             {
                 if (reader.HasRows && reader.Read())
                 {

@@ -27,6 +27,7 @@ namespace dc
             ServerNetManager.Instance.Setup();
             UnitManager.Instance.Setup();
             AccountCacheManager.Instance.Setup();
+            IdSharedManager.Instance.Setup();
         }
         public void Destroy()
         {
@@ -37,6 +38,7 @@ namespace dc
             ServerNetManager.Instance.Destroy();
             UnitManager.Instance.Destroy();
             AccountCacheManager.Instance.Destroy();
+            IdSharedManager.Instance.Destroy();
 
             Log.Info("服务器关闭");
         }
@@ -55,6 +57,8 @@ namespace dc
             DBManager.Instance.Start(ServerConfig.db_info.db_list); 
             ServerNetManager.Instance.Start(ServerConfig.net_info.port_for_server);
             ServerNetManager.Instance.InitNextCharIdx();
+
+            IdSharedManager.Instance.Init();
 
             Framework.Instance.MainLoop();
         }

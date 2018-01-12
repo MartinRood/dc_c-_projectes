@@ -87,6 +87,7 @@
     <Compile Include="src\sys\counter\PlayerCounter.cs" />
     <Compile Include="src\sys\fight\FightManager.cs" />
     <Compile Include="src\sys\fight\FightPlayer.cs" />
+    <Compile Include="src\server\id\IdSharedManager.cs" />
     <Compile Include="src\sys\mail\Mailbox.cs" />
     <Compile Include="src\sys\mail\MailManager.cs" />
     <Compile Include="src\sys\relation\Relation.cs" />

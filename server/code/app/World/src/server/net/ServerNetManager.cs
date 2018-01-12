@@ -187,6 +187,9 @@ namespace dc
                             rep_msg.ws_time = GameTimeManager.Instance.server_time;
                             this.Send(conn_idx, rep_msg);
 
+                            //告诉启动次数
+                            IdSharedManager.Instance.SendStartCount(conn_idx);
+
                             //告诉当前存在的服务器
                             List<ConnAppProc> list_app = new List<ConnAppProc>();
                             GetConnAppList(list_app, eServerType.GATE);
