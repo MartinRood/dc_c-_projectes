@@ -32,6 +32,10 @@ namespace dc
         /// 邮件
         /// </summary>
         private int m_cur_mail_idx = 0;
+        /// <summary>
+        /// 物品
+        /// </summary>
+        private int m_cur_item_idx = 0;
 
         public void InitServerStartCount(int start_count)
         {
@@ -62,6 +66,13 @@ namespace dc
         public long GetNextMailIdx()
         {
             return (m_base_id + ++m_cur_mail_idx);
+        }
+        /// <summary>
+        /// 物品
+        /// </summary>
+        public long GetNextItemIdx()
+        {
+            return (m_base_id + ++m_cur_item_idx);
         }
     }
 }

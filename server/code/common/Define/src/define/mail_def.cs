@@ -395,7 +395,7 @@ namespace dc
         // 正文
         public string content;
         // 物品列表
-        public List<ItemID> items;
+        public List<PropID> items;
 
         public void Read(ByteArray by)
         {
@@ -404,7 +404,7 @@ namespace dc
             ushort count = by.ReadUShort();
             for (int i = 0; i < count; ++i)
             {
-                ItemID obj = new ItemID();
+                PropID obj = new PropID();
                 obj.Read(by);
                 this.Add(obj);
             }
@@ -417,13 +417,13 @@ namespace dc
             by.WriteUShort(count);
             for (int i = 0; i < count; ++i)
             {
-                ItemID obj = items[i];
+                PropID obj = items[i];
                 obj.Write(by);
             }
         }
-        public void Add(ItemID obj)
+        public void Add(PropID obj)
         {
-            if (items == null) items = new List<ItemID>();
+            if (items == null) items = new List<PropID>();
             items.Add(obj);
         }
     }

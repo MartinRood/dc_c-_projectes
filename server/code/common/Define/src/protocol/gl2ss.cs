@@ -128,7 +128,7 @@ namespace dc.gl2ss
     {
         public long char_idx;
         public PlayerIDName src_player_id = new PlayerIDName();//赠送者id
-        public ItemID item_id = new ItemID();
+        public PropID item_id = new PropID();
 
         public override void Read(ByteArray by)
         {

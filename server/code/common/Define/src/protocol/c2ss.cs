@@ -335,7 +335,7 @@ namespace dc.c2ss
     public class RelationGive : PackBaseC2S
     {
         public long target_char_idx;
-        public ItemID item_id = new ItemID(); 
+        public PropID item_id = new PropID(); 
 
         public override void Read(ByteArray by)
         {

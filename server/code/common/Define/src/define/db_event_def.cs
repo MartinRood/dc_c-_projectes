@@ -80,7 +80,7 @@ namespace dc
         public struct GiveContent : ISerializeObject
         {
             public string char_name;
-            public ItemID item_id;
+            public PropID item_id;
             public void Read(ByteArray by)
             {
                 char_name = by.ReadString();

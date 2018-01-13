@@ -32,7 +32,7 @@ namespace dc
     {
         Invalid = 0,	    //无效背包索引
 
-        Default,		    // 默认背包(主背包)		
+        Main,		        // 默认背包(主背包)		
         Store,		        // 仓库					
         Equip,			    // 装备
         Weapon,			    // 武器(枪械)			
@@ -42,7 +42,7 @@ namespace dc
     /// <summary>
     /// 是否可堆叠
     /// </summary>
-    public enum eBagPropStackType
+    public enum eBagItemStackType
 	{
 		No	= 1, // 不可堆叠
 		Yes	= 2, // 可堆叠
@@ -50,7 +50,7 @@ namespace dc
     /// <summary>
     /// 背包操作
     /// </summary>
-    public enum eBagPropOperation
+    public enum eBagItemOperation
     {
         Invalid = 0,	// 无效值
 
@@ -71,7 +71,7 @@ namespace dc
     /// <summary>
     /// 操作结果
     /// </summary>
-    public enum eBagPropOptResult
+    public enum eBagItemOptResult
     {
         SUCCEED = 0,				    // 操作成功
         NOT_EXIST = 1,				    // 物件不存在
@@ -82,8 +82,8 @@ namespace dc
         LACK_GOLD_ERROR,			    // 点卷不足
         MATERAIL_LACK_ERROR,		    // 材料缺乏
         BAG_TYPE_ERROR,				    // 背包类型错误
-        BAG_HAS_NO_PROP_ERROR,			// 背包没有道具
-        BAG_PROP_CAN_NOT_EQUIPED_ERROR,	// 该道具不能装备(不是武器，不能更换)
+        BAG_HAS_NO_item_ERROR,			// 背包没有道具
+        BAG_item_CAN_NOT_EQUIPED_ERROR,	// 该道具不能装备(不是武器，不能更换)
         LACK_COIN_ERROR,			    // 钱币不足
 
         HAS_MAX_NUMBER,				    // 已经最大持有数
@@ -108,10 +108,28 @@ namespace dc
 
         Max,
     }
+
     /// <summary>
-    /// 武器的位置索引
+    /// 装备所在槽位
     /// </summary>
-    public enum eWeaponIndex
+    public enum eEquipBagSlop
+    {
+        GLASSES = 0,        // 眼镜
+        NECKLACE,           // 项链
+        ARMOR,              // 衣服
+        RING,               // 戒指
+        BOOTHOSE,           // 护腿
+        ARMGUARD,           // 护手
+        SHOES,              // 鞋子
+        GLOVE,              // 手套
+        WEAPON,             // 武器
+        FASHION,            // 时装
+        CAR,                // 坐骑
+    }
+    /// <summary>
+    /// 武器所在槽位
+    /// </summary>
+    public enum eWeaponBagSlop
     {
         Invalid = 0,	    // 无效的
         Trigger,		    // 扳机

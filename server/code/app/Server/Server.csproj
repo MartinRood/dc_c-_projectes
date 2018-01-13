@@ -63,6 +63,7 @@
     <Compile Include="src\server\cmd\ServerCmdManager.cs" />
     <Compile Include="src\server\db\event\DBEvent.cs" />
     <Compile Include="src\server\db\handle\SQLCharHandle.cs" />
+    <Compile Include="src\server\db\handle\SQLItemHandle.cs" />
     <Compile Include="src\server\db\handle\SQLCounterHandle.cs" />
     <Compile Include="src\server\db\handle\SQLMailHandle.cs" />
     <Compile Include="src\server\db\handle\SQLDBEventHandle.cs" />
@@ -90,6 +91,14 @@
     <Compile Include="src\server\id\IdSharedManager.cs" />
     <Compile Include="src\sys\mail\Mailbox.cs" />
     <Compile Include="src\sys\mail\MailManager.cs" />
+    <Compile Include="src\sys\prop\bag\BagBase.cs" />
+    <Compile Include="src\sys\prop\bag\Bag_Weapon.cs" />
+    <Compile Include="src\sys\prop\bag\Bag_Store.cs" />
+    <Compile Include="src\sys\prop\bag\Bag_Equip.cs" />
+    <Compile Include="src\sys\prop\bag\Bag_Main.cs" />
+    <Compile Include="src\sys\prop\item\Item.cs" />
+    <Compile Include="src\sys\prop\bag\PlayerBag.cs" />
+    <Compile Include="src\sys\prop\item\ItemManager.cs" />
     <Compile Include="src\sys\relation\Relation.cs" />
     <Compile Include="src\sys\relation\RelationManager.cs" />
   </ItemGroup>
@@ -112,6 +121,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="src\data\cache\" />
+    <Folder Include="src\sys\prop\template\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -18,11 +18,14 @@ namespace dc
         private bool m_is_dirty = false;        //数据是否有更改
         private long m_last_save_time = 0;      //最后保存时间
 
+        private PlayerBag m_player_bag = null;  //包裹
+
         public Player()
             :base()
         {
             m_unit_type = eUnitType.PLAYER;
             m_unit_attr = new PlayerAttribute(this);
+            m_player_bag = new PlayerBag();
         }
         /// <summary>
         /// 对象池初始化
@@ -39,11 +42,15 @@ namespace dc
         {
             base.OnEnter();
 
+            m_player_bag.Setup();
+
             EventController.TriggerEvent(EventID.PLAYER_ENTER_GAME, m_obj_idx);
         }
         public override void OnLeave()
         {
             EventController.TriggerEvent(EventID.PLAYER_LEAVE_GAME, m_obj_idx);
+
+            m_player_bag.Destroy();
 
             m_unit_attr.SetAttribInteger(eUnitModType.UMT_time_last_logout, Time.second_time, true, false, false, false, false);
             this.Save();
@@ -86,6 +93,9 @@ namespace dc
 
             m_unit_attr.player_info.Copy(data);
             m_unit_attr.SetAttribInteger(eUnitModType.UMT_time_last_login, Time.second_time, false, false, false, false, false);
+
+            //逻辑部分
+            m_player_bag.Load(m_obj_idx);
         }      
         /// <summary>
         /// 保存到db
@@ -93,6 +103,8 @@ namespace dc
         public void Save()
         {
             SQLCharHandle.SaveCharacterInfo(m_db_id, m_unit_attr.player_info);
+
+            m_player_bag.Save();
 
             m_is_dirty = false;
             m_last_save_time = Time.timeSinceStartup;
@@ -118,14 +130,14 @@ namespace dc
         /// 消耗物品
         /// </summary>
         /// <param name="info"></param>
-        public void Consume(ItemID item_id, eClientEventAction action = eClientEventAction.Unknow)
+        public void Consume(PropID item_id, eClientEventAction action = eClientEventAction.Unknow)
         {
             switch (item_id.type)
             {
-                case eMainItemType.Item:
+                case ePropType.ITEM:
                     ConsumeItem(item_id.obj_type, item_id.obj_value);
                     break;
-                case eMainItemType.Currency:
+                case ePropType.CURRENCY:
                     ConsumeCurrency((eCurrencyType)item_id.obj_type, item_id.obj_value);
                     break;
             }

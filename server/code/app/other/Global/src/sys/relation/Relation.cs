@@ -462,7 +462,7 @@ namespace dc
         /// <summary>
         /// 好友赠送
         /// </summary>
-        public void FriendGiveCommand(long target_char_idx, ItemID item_id)
+        public void FriendGiveCommand(long target_char_idx, PropID item_id)
         {
             Unit player = UnitManager.Instance.GetUnitByIdx(m_char_idx);
             if (player == null)
@@ -474,7 +474,7 @@ namespace dc
                 return;
 
             //赠送是否合法
-            if (!item.IsValidItem(item_id))
+            if (!item.IsValidProp(item_id))
                 return;
 
             //写入事件
@@ -661,7 +661,7 @@ namespace dc
                             Log.Info("赠送 src:" + relation_evt.source_char_idx + " dst:" + relation_evt.target_char_idx);
                             RelationEventContent.GiveContent give_info = relation_evt.bin_content.bin_give_content;
                             //发给ss处理
-                            if(item.IsValidItem(give_info.item_id))
+                            if (item.IsValidProp(give_info.item_id))
                             {
                                 gl2ss.RelationGive msg_give = PacketPools.Get(gl2ss.msg.RELATION_GIVE) as gl2ss.RelationGive;
                                 msg_give.char_idx = m_char_idx;

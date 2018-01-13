@@ -234,7 +234,7 @@ namespace dc
         /// <summary>
         /// 好友赠送
         /// </summary>
-        public void FriendGiveClient(long target_char_idx, ItemID item_id)
+        public void FriendGiveClient(long target_char_idx, PropID item_id)
         {
             //先查找是否有好友
             RelationInfo relation_info;
@@ -245,7 +245,7 @@ namespace dc
             //TODO
 
             //赠送是否合法
-            if (!item.IsValidItem(item_id))
+            if (!item.IsValidProp(item_id))
                 return;
 
             //发送到gl
@@ -307,7 +307,7 @@ namespace dc
         /// <summary>
         /// 赠送
         /// </summary>
-        public void FriendGiveGL(PlayerIDName src_player_id, ItemID item_id)
+        public void FriendGiveGL(PlayerIDName src_player_id, PropID item_id)
         {
             Player player = UnitManager.Instance.GetUnitByIdx(m_char_idx) as Player;
             if (player == null)

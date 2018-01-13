@@ -250,7 +250,7 @@ namespace dc
         /// <summary>
         /// 赠送
         /// </summary>
-        public static void SendRelationGive(long char_idx, ItemID item_id)
+        public static void SendRelationGive(long char_idx, PropID item_id)
         {
             c2ss.RelationGive msg = PacketPools.Get(c2ss.msg.RELATION_GIVE) as c2ss.RelationGive;
             msg.target_char_idx = char_idx;

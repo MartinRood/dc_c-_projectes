@@ -58,8 +58,8 @@
     <Compile Include="src\define\fight_def.cs" />
     <Compile Include="src\define\global_def.cs" />
     <Compile Include="src\define\interface_def.cs" />
-    <Compile Include="src\define\item_def.cs" />
     <Compile Include="src\define\mail_def.cs" />
+    <Compile Include="src\define\prop_def.cs" />
     <Compile Include="src\define\relation_def.cs" />
     <Compile Include="src\define\scene_def.cs" />
     <Compile Include="src\define\type_def.cs" />

@@ -91,8 +91,8 @@ namespace dc
 
             if (col == 5)
             {
-                ItemID item_id = new ItemID();
-                item_id.type = eMainItemType.Currency;
+                PropID item_id = new PropID();
+                item_id.type = ePropType.CURRENCY;
                 item_id.obj_type = (uint)eCurrencyType.Gold;
                 item_id.obj_value = 1000;
 
