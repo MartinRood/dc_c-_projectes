@@ -54,6 +54,8 @@
             this.m_status_scene = new System.Windows.Forms.ToolStripStatusLabel();
             this.m_status_log = new System.Windows.Forms.ToolStripStatusLabel();
             this.m_main_panel = new System.Windows.Forms.Panel();
+            this.物品ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.SysItemStoreToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.mainMenuStrip.SuspendLayout();
             this.mainStatusStrip.SuspendLayout();
             this.SuspendLayout();
@@ -138,7 +140,8 @@
             this.LogicToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.SysMailToolStripMenuItem,
             this.SysRelationToolStripMenuItem,
-            this.SysChatToolStripMenuItem});
+            this.SysChatToolStripMenuItem,
+            this.物品ToolStripMenuItem});
             this.LogicToolStripMenuItem.Name = "LogicToolStripMenuItem";
             this.LogicToolStripMenuItem.Size = new System.Drawing.Size(44, 21);
             this.LogicToolStripMenuItem.Text = "系统";
@@ -146,7 +149,7 @@
             // SysMailToolStripMenuItem
             // 
             this.SysMailToolStripMenuItem.Name = "SysMailToolStripMenuItem";
-            this.SysMailToolStripMenuItem.Size = new System.Drawing.Size(100, 22);
+            this.SysMailToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.SysMailToolStripMenuItem.Text = "邮件";
             this.SysMailToolStripMenuItem.Click += new System.EventHandler(this.SysMailToolStripMenuItem_Click);
             // 
@@ -156,7 +159,7 @@
             this.SysRelationAppleToolStripMenuItem,
             this.SysRelationListToolStripMenuItem});
             this.SysRelationToolStripMenuItem.Name = "SysRelationToolStripMenuItem";
-            this.SysRelationToolStripMenuItem.Size = new System.Drawing.Size(100, 22);
+            this.SysRelationToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.SysRelationToolStripMenuItem.Text = "关系";
             // 
             // SysRelationAppleToolStripMenuItem
@@ -176,7 +179,7 @@
             // SysChatToolStripMenuItem
             // 
             this.SysChatToolStripMenuItem.Name = "SysChatToolStripMenuItem";
-            this.SysChatToolStripMenuItem.Size = new System.Drawing.Size(100, 22);
+            this.SysChatToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.SysChatToolStripMenuItem.Text = "聊天";
             this.SysChatToolStripMenuItem.Click += new System.EventHandler(this.SysChatToolStripMenuItem_Click);
             // 
@@ -194,27 +197,27 @@
             // ToolsSetToolStripMenuItem
             // 
             this.ToolsSetToolStripMenuItem.Name = "ToolsSetToolStripMenuItem";
-            this.ToolsSetToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.ToolsSetToolStripMenuItem.Size = new System.Drawing.Size(112, 22);
             this.ToolsSetToolStripMenuItem.Text = "设置";
             // 
             // ToolsLogToolStripMenuItem
             // 
             this.ToolsLogToolStripMenuItem.Name = "ToolsLogToolStripMenuItem";
-            this.ToolsLogToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.ToolsLogToolStripMenuItem.Size = new System.Drawing.Size(112, 22);
             this.ToolsLogToolStripMenuItem.Text = "日志";
             this.ToolsLogToolStripMenuItem.Click += new System.EventHandler(this.ToolsLogToolStripMenuItem_Click);
             // 
             // ToolsConsoleToolStripMenuItem
             // 
             this.ToolsConsoleToolStripMenuItem.Name = "ToolsConsoleToolStripMenuItem";
-            this.ToolsConsoleToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.ToolsConsoleToolStripMenuItem.Size = new System.Drawing.Size(112, 22);
             this.ToolsConsoleToolStripMenuItem.Text = "控制台";
             this.ToolsConsoleToolStripMenuItem.Click += new System.EventHandler(this.ToolsConsoleToolStripMenuItem_Click);
             // 
             // pingToolStripMenuItem
             // 
             this.pingToolStripMenuItem.Name = "pingToolStripMenuItem";
-            this.pingToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.pingToolStripMenuItem.Size = new System.Drawing.Size(112, 22);
             this.pingToolStripMenuItem.Text = "Ping";
             this.pingToolStripMenuItem.Click += new System.EventHandler(this.ToolsPingToolStripMenuItem_Click);
             // 
@@ -271,6 +274,21 @@
             this.m_main_panel.Size = new System.Drawing.Size(984, 709);
             this.m_main_panel.TabIndex = 3;
             // 
+            // 物品ToolStripMenuItem
+            // 
+            this.物品ToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.SysItemStoreToolStripMenuItem});
+            this.物品ToolStripMenuItem.Name = "物品ToolStripMenuItem";
+            this.物品ToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.物品ToolStripMenuItem.Text = "物品";
+            // 
+            // SysItemStoreToolStripMenuItem
+            // 
+            this.SysItemStoreToolStripMenuItem.Name = "SysItemStoreToolStripMenuItem";
+            this.SysItemStoreToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.SysItemStoreToolStripMenuItem.Text = "仓库";
+            this.SysItemStoreToolStripMenuItem.Click += new System.EventHandler(this.SysItemStoreToolStripMenuItem_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -323,6 +341,8 @@
         private System.Windows.Forms.ToolStripMenuItem SysRelationListToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem SysChatToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem pingToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem 物品ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem SysItemStoreToolStripMenuItem;
 
 
     }

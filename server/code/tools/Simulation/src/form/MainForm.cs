@@ -229,6 +229,17 @@ namespace dc
             ChatForm chat_form = new ChatForm();
             chat_form.ShowDialog(this);
         }
+        /// <summary>
+        /// 物品-仓库
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void SysItemStoreToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ItemListForm item_form = new ItemListForm();
+            item_form.ShowDialog(this);
+        }
+
 
         /// <summary>
         /// 日志

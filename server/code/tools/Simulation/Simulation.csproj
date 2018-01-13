@@ -59,6 +59,12 @@
     <Compile Include="src\form\system\chat\ChatForm.Designer.cs">
       <DependentUpon>ChatForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="src\form\system\item\ItemListForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="src\form\system\item\ItemListForm.Designer.cs">
+      <DependentUpon>ItemListForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="src\form\system\ping\PingForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -178,6 +184,9 @@
     <EmbeddedResource Include="src\form\system\chat\ChatForm.resx">
       <DependentUpon>ChatForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="src\form\system\item\ItemListForm.resx">
+      <DependentUpon>ItemListForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="src\form\system\ping\PingForm.resx">
       <DependentUpon>PingForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -245,9 +254,7 @@
       <Name>websocket-sharp</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="src\form\system\item\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
