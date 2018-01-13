@@ -15,13 +15,10 @@ namespace dc
         private Dictionary<long, ConnAppProc> m_app_servers = null;
         private Dictionary<ushort, ConnAppProc> m_srv_servers = null;//srv->server
 
-        private Dictionary<ushort, long> m_max_char_idx = null;//保存每个分库的最大角色id
-
         public ServerNetManager()
         {
             m_app_servers = new Dictionary<long, ConnAppProc>();
             m_srv_servers = new Dictionary<ushort, ConnAppProc>();
-            m_max_char_idx = new Dictionary<ushort, long>();
             m_send_by = NetUtils.AllocSendPacket();
         }
 
@@ -43,7 +40,6 @@ namespace dc
                 m_net_socket.Destroy();
                 m_net_socket = null;
             }
-            m_max_char_idx.Clear();
         }
         public void Tick()
         {
@@ -75,52 +71,6 @@ namespace dc
             msg.account_idx = account_idx;
             ServerNetManager.Instance.Send(unit.client_uid.srv_uid, msg);
         }
-
-        #region ws分配角色id
-        /// <summary>
-        /// 初始化每个gamedb对应的最大账号id
-        /// </summary>
-        public void InitNextCharIdx()
-        {
-            foreach (var obj in ServerConfig.db_info.db_list)
-            {
-                if (obj.type == (ushort)eDBType.Game)
-                {
-                    QueryMaxCharIdx(obj.id);
-                }
-            }
-        }
-        private void QueryMaxCharIdx(ushort game_db_id)
-        {
-            DBID db_id = new DBID();
-            db_id.game_id = game_db_id;
-            SQLCharHandle.QueryMaxCharIdx(ServerConfig.net_info.server_realm, db_id, max_id =>
-            {
-                long next_char_idx = max_id;
-                if (next_char_idx == 0)
-                {//没有数据，则初始化起始值
-                    next_char_idx = ServerConfig.net_info.server_realm;
-                    next_char_idx = next_char_idx * GlobalID.INIT_CHAR_IDX;
-                }
-                m_max_char_idx.Add(game_db_id, next_char_idx);
-                Log.Info("next_char_idx " + game_db_id + " :" + next_char_idx);
-            });
-        }
-        /// <summary>
-        /// 创号时，分配唯一账号id
-        /// </summary>
-        public long GetNextCharIdx(ushort game_db_id)
-        {
-            long next_char_idx = 0;
-            if (m_max_char_idx.TryGetValue(game_db_id, out next_char_idx))
-            {
-                m_max_char_idx[game_db_id] = ++next_char_idx;
-                return next_char_idx;
-            }
-            Log.Warning("未找到db_id:" + game_db_id);
-            return 0;
-        }
-        #endregion
 
         #region 网络
         private void OnAcceptConnect(long conn_idx)

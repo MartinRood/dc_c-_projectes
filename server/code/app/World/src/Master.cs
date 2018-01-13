@@ -56,7 +56,6 @@ namespace dc
             DataManager.Instance.LoadAll();
             DBManager.Instance.Start(ServerConfig.db_info.db_list); 
             ServerNetManager.Instance.Start(ServerConfig.net_info.port_for_server);
-            ServerNetManager.Instance.InitNextCharIdx();
 
             IdSharedManager.Instance.Init();
 
