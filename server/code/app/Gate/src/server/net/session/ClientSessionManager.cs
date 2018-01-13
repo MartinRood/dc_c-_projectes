@@ -104,7 +104,7 @@ namespace dc
             if (!m_accept_sessions.ContainsKey(conn_idx))
                 return null;
 
-            ClientSession session = CommonObjectPools.Spawn<ClientSession>();
+            ClientSession session = new ClientSession();
             session.Setup(conn_idx);
             m_sessions.Add(conn_idx, session);
             return session;
@@ -119,7 +119,6 @@ namespace dc
                 m_account_sessions.Remove(session.account_idx);
 
                 session.Destroy();
-                CommonObjectPools.Despawn(session);
             }
             m_sessions.Remove(conn_idx);
             return true;
@@ -129,7 +128,6 @@ namespace dc
             foreach (var obj in m_sessions)
             {
                 obj.Value.Destroy();
-                CommonObjectPools.Despawn(obj.Value);
             }
             m_sessions.Clear();
             m_account_sessions.Clear();

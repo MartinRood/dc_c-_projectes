@@ -53,7 +53,6 @@ namespace dc
             if(m_units.TryGetValue(unit_idx, out unit))
             {
                 unit.Destroy();
-                CommonObjectPools.Despawn(unit);
             }
             if (m_main_player != null && m_main_player.obj_idx == unit_idx)
                 m_main_player = null;
@@ -65,7 +64,6 @@ namespace dc
             foreach(var obj in m_units)
             {
                 obj.Value.Destroy();
-                CommonObjectPools.Despawn(obj.Value);
             }
             m_units.Clear();
             m_main_player = null;

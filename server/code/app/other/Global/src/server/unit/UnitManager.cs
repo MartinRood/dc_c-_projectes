@@ -30,7 +30,6 @@ namespace dc
             foreach (var obj in m_cache_units)
             {
                 obj.Value.OnLeave();
-                CommonObjectPools.Despawn(obj.Value);
             }
             m_cache_units.Clear();
             m_name_units.Clear();
@@ -74,7 +73,7 @@ namespace dc
                 this.RemoveUnit(unit);
             }
             //创建玩家
-            unit = CommonObjectPools.Spawn<Unit>();
+            unit = new Unit();
             unit.Setup(ss_uid, data);
             UnitManager.Instance.AddUnit(unit);
             unit.OnEnter();
@@ -109,7 +108,6 @@ namespace dc
             if (unit == null) return;
             m_cache_units.Remove(unit.char_idx);
             m_name_units.Remove(unit.char_name);
-            CommonObjectPools.Despawn(unit);
         }
 
         public Unit GetUnitByIdx(long char_idx)

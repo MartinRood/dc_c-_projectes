@@ -27,7 +27,6 @@ namespace dc
             foreach (var member in m_cache_members)
             {
                 member.Value.Destroy();
-                CommonObjectPools.Despawn(member);
             }
             m_cache_members.Clear();
         }
@@ -77,7 +76,7 @@ namespace dc
         {
             this.RemoveMember(char_idx);
 
-            MemberRelation member = CommonObjectPools.Spawn<MemberRelation>();
+            MemberRelation member = new MemberRelation();
             member.Setup(char_idx);
             m_cache_members.Add(char_idx, member);
         }
@@ -107,7 +106,6 @@ namespace dc
             if (m_cache_members.TryGetValue(char_idx, out member))
             {
                 member.Destroy();
-                CommonObjectPools.Despawn(member);
             }
             m_cache_members.Remove(char_idx);
         }

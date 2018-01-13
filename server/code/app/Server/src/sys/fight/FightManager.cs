@@ -27,7 +27,6 @@ namespace dc
             foreach (var obj in m_fight_players)
             {
                 obj.Value.Destroy();
-                CommonObjectPools.Despawn(obj.Value);
             }
             m_fight_players.Clear();
         }

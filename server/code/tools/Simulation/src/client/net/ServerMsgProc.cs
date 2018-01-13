@@ -289,7 +289,7 @@ namespace dc
             player_info.vip_flags = char_info.vip_flags;
 
             //创建玩家对象
-            Player player = CommonObjectPools.Spawn<Player>();
+            Player player = new Player();
             player.obj_idx = char_info.char_idx;
             player.Setup();
             player.LoadData(player_info);
@@ -309,7 +309,7 @@ namespace dc
             Unit unit = null;
             switch(msg.unit_idx.type)
             {
-                case eUnitType.PLAYER: unit = CommonObjectPools.Spawn<Player>(); break;
+                case eUnitType.PLAYER: unit = new Player(); break;
             }
             if(unit == null)
             {
