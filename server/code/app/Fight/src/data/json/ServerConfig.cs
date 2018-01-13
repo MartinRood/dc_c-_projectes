@@ -14,7 +14,14 @@ namespace dc
         public static bool Load()
         {
             if (JsonFile.Read<ServerNetInfo>("./fight.json", ref net_info))
+            {
+                if (!server.CheckSidValid(net_info.server_uid))
+                {
+                    Log.Error("错误的服务器id:" + net_info.server_uid);
+                    return false;
+                }
                 return true;
+            }
             else 
                 return false;
         }

@@ -31,34 +31,5 @@ namespace dc
                 callback(max_id);
             });
         }
-
-        /// <summary>
-        /// 创号
-        /// </summary>
-        /// <param name="info"></param>
-        /// <param name="callback"></param>
-        public static void CreateCharacter(long account_idx, DBID db_id, CreateCharacterInfo info, Action<long> callback)
-        {
-            string sql = "call SP_CHARACTER_CREATE("
-                + 1 + ","
-                + info.char_idx + ","
-                + account_idx + ","
-                + info.spid + ",'"
-                + info.char_name + "',"
-                + info.char_type + ","
-                + info.ws_id + ","
-                + info.ss_id + ","
-                + info.fs_id
-                + ")";
-            DBManager.Instance.GetDB(eDBType.Game, db_id.game_id).Query(sql, (reader) =>
-            {
-                long result = 0;
-                if (reader.HasRows && reader.Read())
-                {
-                    result = reader.GetInt64(0);
-                }
-                callback(result);
-            });
-        }
     }
 }

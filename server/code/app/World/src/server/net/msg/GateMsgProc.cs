@@ -46,7 +46,6 @@ namespace dc
             RegisterMsgProc(gs2ws.msg.PROXY_CLIENT_MSG, HandleProxyClientMsg);
             RegisterMsgProc(gs2ws.msg.CLIENT_LOGIN, OnClientLogin);
             RegisterMsgProc(gs2ws.msg.ROBOT_TEST, OnRobotTest);
-            RegisterMsgProc(gs2ws.msg.CREATE_CHARACTER, OnCreateCharacter);
             RegisterMsgProc(gs2ws.msg.ONLINE_COUNT, OnPlayerCount);
         }
         private void RegisterMsgProc(ushort id, MsgProcFunction fun)
@@ -192,48 +191,6 @@ namespace dc
             rep_msg.client_uid = msg.client_uid;
             rep_msg.length = msg.length;
             this.Send(rep_msg);
-        }
-        /// <summary>
-        /// 创建角色
-        /// </summary>
-        private void OnCreateCharacter(PacketBase packet)
-        {
-            gs2ws.CreateCharacter msg = packet as gs2ws.CreateCharacter;
-
-            CreateCharacterInfo create_info = new CreateCharacterInfo();
-            create_info.spid = msg.spid;
-            create_info.ws_id = ServerConfig.net_info.server_realm;
-            create_info.ss_id = 0;
-            create_info.fs_id = 0;
-            create_info.char_idx = ServerNetManager.Instance.GetNextCharIdx(msg.db_id);
-            create_info.char_name = msg.name;
-            create_info.char_type = (byte)msg.flags;
-
-            long account_idx = msg.account_idx;
-            ushort gs_uid = msg.server_uid.gs_uid;
-            SQLCharHandle.CreateCharacter(account_idx, new DBID(msg.db_id), create_info, (res) =>
-            {
-                eCreateCharResult result = eCreateCharResult.E_FAILED_COMMONERROR;
-                if (create_info.char_idx == res)
-                    result = eCreateCharResult.E_SUCCESS;
-                else
-                {
-                    switch (res)
-                    {
-                        case 0: result = eCreateCharResult.E_FAILED_INTERNALERROR; break;
-                        case 1: result = eCreateCharResult.E_FAILED_CHARCOUNTLIMIT; break;
-                        case 2: result = eCreateCharResult.E_FAILED_INVALIDPARAM_REPEATEDNAME; break;
-                        case 3: result = eCreateCharResult.E_FAILED_COMMONERROR; break;
-                    }
-                }
-
-                ws2gs.CreateCharacter rep_msg = PacketPools.Get(ws2gs.msg.CREATE_CHARACTER) as ws2gs.CreateCharacter;
-                rep_msg.result = result;
-                rep_msg.account_idx = account_idx;
-                rep_msg.char_idx = create_info.char_idx;
-                ServerNetManager.Instance.Send(gs_uid, rep_msg);
-            }
-            );
         }
         /// <summary>
         /// 上报玩家数量

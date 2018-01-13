@@ -6,6 +6,46 @@ using System.Text;
 namespace dc
 {
     /// <summary>
+    /// 服务器定义
+    /// @author hannibal
+    /// @time 2016-7-27
+    /// </summary>
+    public class server
+    {
+        /// <summary>
+        /// 服务器内部最大id
+        /// 1.不同大区，id可以相同
+        /// </summary>
+        public const ushort MAX_SERVER_IDX = 1024;
+        /// <summary>
+        /// 服务器最大区号
+        /// 1.不同运营商，如果不会合服，大区id可以相同
+        /// </summary>
+        public const ushort MAX_REALM_IDX = 32767;
+        /// <summary>
+        /// 服务器最大启动次数
+        /// 1.每次开新服，记得重置数据库表(server_start_count)
+        /// </summary>
+        public const int MAX_SERVER_START_COUNT = 262144;//2^18
+
+        public static bool CheckSidValid(ushort id)
+        {
+            if (id < 1 || id > server.MAX_SERVER_IDX)
+            {
+                return false;
+            }
+            return true;
+        }
+        public static bool CheckRealmValid(ushort id)
+        {
+            if (id < 1 || id > server.MAX_REALM_IDX)
+            {
+                return false;
+            }
+            return true;
+        }
+    }
+    /// <summary>
     /// 内部服务器id
     /// </summary>
     public struct InterServerID : ISerializeObject

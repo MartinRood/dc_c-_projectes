@@ -41,6 +41,7 @@ namespace dc
             ///处理gate消息
             RegisterMsgProc(gs2ss.msg.PROXY_CLIENT_MSG, HandleProxyClientMsg);
             RegisterMsgProc(gs2ss.msg.ENUM_CHAR, OnEnumCharacterList);
+            RegisterMsgProc(gs2ss.msg.CREATE_CHARACTER, OnCreateCharacter);
             RegisterMsgProc(gs2ss.msg.ENTER_GAME, OnEnterGame);
             RegisterMsgProc(gs2ss.msg.ROBOT_TEST, OnRobotTest);
             RegisterMsgProc(gs2ss.msg.LOGOUT_ACCOUNT, OnLogoutAccount);
@@ -128,6 +129,48 @@ namespace dc
                     rep_msg.list.Add(char_data);
                 }
                 ServerNetManager.Instance.SendProxy(client_uid, rep_msg);
+            }
+            );
+        }
+        /// <summary>
+        /// 创建角色
+        /// </summary>
+        private void OnCreateCharacter(PacketBase packet)
+        {
+            gs2ss.CreateCharacter msg = packet as gs2ss.CreateCharacter;
+
+            CreateCharacterInfo create_info = new CreateCharacterInfo();
+            create_info.spid = msg.spid;
+            create_info.ws_id = ServerNetManager.Instance.srv_realm_idx;
+            create_info.ss_id = 0;
+            create_info.fs_id = 0;
+            create_info.char_idx = IdSharedManager.Instance.GetNextCharIdx();
+            create_info.char_name = msg.name;
+            create_info.char_type = (byte)msg.flags;
+
+            long account_idx = msg.account_idx;
+            ushort gs_uid = msg.server_uid.gs_uid;
+            SQLCharHandle.CreateCharacter(account_idx, new DBID(msg.game_db_id), create_info, (res) =>
+            {
+                eCreateCharResult result = eCreateCharResult.E_FAILED_COMMONERROR;
+                if (create_info.char_idx == res)
+                    result = eCreateCharResult.E_SUCCESS;
+                else
+                {
+                    switch (res)
+                    {
+                        case 0: result = eCreateCharResult.E_FAILED_INTERNALERROR; break;
+                        case 1: result = eCreateCharResult.E_FAILED_CHARCOUNTLIMIT; break;
+                        case 2: result = eCreateCharResult.E_FAILED_INVALIDPARAM_REPEATEDNAME; break;
+                        case 3: result = eCreateCharResult.E_FAILED_COMMONERROR; break;
+                    }
+                }
+
+                ss2gs.CreateCharacter rep_msg = PacketPools.Get(ss2gs.msg.CREATE_CHARACTER) as ss2gs.CreateCharacter;
+                rep_msg.result = result;
+                rep_msg.account_idx = account_idx;
+                rep_msg.char_idx = create_info.char_idx;
+                ServerNetManager.Instance.Send(gs_uid, rep_msg);
             }
             );
         }

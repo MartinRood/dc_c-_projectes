@@ -11,6 +11,11 @@ namespace dc
         {
             bool ret_net = JsonFile.Read<ServerNetInfo>("./server.json", ref net_info);
             bool ret_db = JsonFile.Read<ServerDBInfo>("./db.json", ref db_info);
+            if (!server.CheckSidValid(net_info.server_uid))
+            {
+                Log.Error("错误的服务器id:" + net_info.server_uid);
+                return false;
+            }
             return ret_net && ret_db;
         }
         /// <summary>

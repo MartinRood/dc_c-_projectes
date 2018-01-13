@@ -11,6 +11,16 @@ namespace dc
         {
             bool ret_net = JsonFile.Read<ServerNetInfo>("./world.json", ref net_info);
             bool ret_db = JsonFile.Read<ServerDBInfo>("./db.json", ref db_info);
+            if (!server.CheckRealmValid(net_info.server_realm))
+            {
+                Log.Error("错误的大区id:" + net_info.server_realm);
+                return false;
+            }
+            if (!server.CheckSidValid(net_info.server_uid))
+            {
+                Log.Error("错误的服务器id:" + net_info.server_uid);
+                return false;
+            }
             return ret_net && ret_db;
         }
     }

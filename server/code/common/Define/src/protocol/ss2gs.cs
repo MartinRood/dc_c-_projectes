@@ -8,7 +8,8 @@ namespace dc.ss2gs
         public const ushort Begin = ProtocolID.MSG_BASE_SS2GS;
         public const ushort PROXY_SS_MSG            = Begin + 1;
         public const ushort ROBOT_TEST              = Begin + 2;            //压力测试
-
+        
+        public const ushort CREATE_CHARACTER        = Begin + 3;            //创建角色
         public const ushort REQ_KICK_ACCOUNT        = Begin + 4;            //踢号
         public const ushort ENTER_GAME              = Begin + 5;
         public const ushort NOTIFY_SERVER           = Begin + 6;            //分配给玩家的fs
@@ -18,9 +19,33 @@ namespace dc.ss2gs
         {
             PacketPools.Register(PROXY_SS_MSG, "ProxyS2CMsg");
             PacketPools.Register(ROBOT_TEST, "ss2gs.RobotTest");
+            PacketPools.Register(CREATE_CHARACTER, "ss2gs.CreateCharacter");
             PacketPools.Register(REQ_KICK_ACCOUNT, "ss2gs.ReqKickoutAccount");
             PacketPools.Register(ENTER_GAME, "ss2gs.EnterGame");
             PacketPools.Register(NOTIFY_SERVER, "ss2gs.NotifyServer");
+        }
+    }
+    /// <summary>
+    /// 创建角色
+    /// </summary>
+    public class CreateCharacter : PackBaseS2S
+    {
+        public eCreateCharResult result;
+        public long account_idx;
+        public long char_idx;// 创建成功的角色id
+        public override void Read(ByteArray by)
+        {
+            base.Read(by);
+            result = (eCreateCharResult)by.ReadByte();
+            account_idx = by.ReadLong();
+            char_idx = by.ReadLong();
+        }
+        public override void Write(ByteArray by)
+        {
+            base.Write(by);
+            by.WriteByte((byte)result);
+            by.WriteLong(account_idx);
+            by.WriteLong(char_idx);
         }
     }
     /// <summary>

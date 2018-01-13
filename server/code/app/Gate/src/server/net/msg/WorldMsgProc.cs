@@ -43,7 +43,6 @@ namespace dc
             RegisterMsgProc(ws2gs.msg.CLIENT_LOGIN, OnClientLogin);
             RegisterMsgProc(ws2gs.msg.REQ_KICK_ACCOUNT, OnReqKickAccount);
             RegisterMsgProc(ws2gs.msg.ROBOT_TEST, OnRobotTest);
-            RegisterMsgProc(ws2gs.msg.CREATE_CHARACTER, OnCreateCharacter);
         }
         private void RegisterMsgProc(ushort id, MsgProcFunction fun)
         {
@@ -168,21 +167,6 @@ namespace dc
             gs2c.RobotTest rep_msg = PacketPools.Get(gs2c.msg.ROBOT_TEST) as gs2c.RobotTest;
             rep_msg.length = msg.length;
             ForClientNetManager.Instance.Send(msg.client_uid.conn_idx, rep_msg);
-        }
-        /// <summary>
-        /// 创建角色
-        /// </summary>
-        private void OnCreateCharacter(PacketBase packet)
-        {
-            ws2gs.CreateCharacter msg = packet as ws2gs.CreateCharacter;
-
-            ClientSession session = ClientSessionManager.Instance.GetSessionByAccount(msg.account_idx);
-            if (session == null) return;
-
-            gs2c.CreateCharacter rep_msg = PacketPools.Get(gs2c.msg.CREATE_CHARACTER) as gs2c.CreateCharacter;
-            rep_msg.result = msg.result;
-            rep_msg.char_idx = msg.char_idx;
-            session.Send(rep_msg);
         }
     }
 }

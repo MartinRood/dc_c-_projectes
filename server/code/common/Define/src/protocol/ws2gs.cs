@@ -11,7 +11,6 @@ namespace dc.ws2gs
 
         public const ushort CLIENT_LOGIN        = Begin + 3;            //登陆结果
         public const ushort REQ_KICK_ACCOUNT    = Begin + 4;            //踢号
-        public const ushort CREATE_CHARACTER    = Begin + 5;            //创建角色
 
         public static void RegisterPools()
         {
@@ -19,7 +18,6 @@ namespace dc.ws2gs
             PacketPools.Register(ROBOT_TEST, "ws2gs.RobotTest");
             PacketPools.Register(CLIENT_LOGIN, "ws2gs.ClientLogin");
             PacketPools.Register(REQ_KICK_ACCOUNT, "ws2gs.ReqKickoutAccount");
-            PacketPools.Register(CREATE_CHARACTER, "ws2gs.CreateCharacter");
         }
     }
 
@@ -92,29 +90,6 @@ namespace dc.ws2gs
             client_uid.Write(by);
             by.WriteInt(length);
             by.WriteBytes(data, length);
-        }
-    }
-    /// <summary>
-    /// 请求创建角色
-    /// </summary>
-    public class CreateCharacter : PackBaseS2S
-    {
-        public eCreateCharResult result;
-        public long account_idx;
-        public long char_idx;// 创建成功的角色id
-        public override void Read(ByteArray by)
-        {
-            base.Read(by);
-            result = (eCreateCharResult)by.ReadByte();
-            account_idx = by.ReadLong();
-            char_idx = by.ReadLong();
-        }
-        public override void Write(ByteArray by)
-        {
-            base.Write(by);
-            by.WriteByte((byte)result);
-            by.WriteLong(account_idx);
-            by.WriteLong(char_idx);
         }
     }
 }

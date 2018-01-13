@@ -299,14 +299,14 @@ namespace dc
         {
             c2gs.CreateCharacter msg = packet as c2gs.CreateCharacter;
 
-            //发送到ws，分配char_idx
-            gs2ws.CreateCharacter rep_msg = PacketPools.Get(gs2ws.msg.CREATE_CHARACTER) as gs2ws.CreateCharacter;
+            //发送到ss
+            gs2ss.CreateCharacter rep_msg = PacketPools.Get(gs2ss.msg.CREATE_CHARACTER) as gs2ss.CreateCharacter;
             rep_msg.client_uid = session.client_uid;
             rep_msg.account_idx = session.account_idx;
-            rep_msg.db_id = session.db_id.game_id;
+            rep_msg.game_db_id = session.db_id.game_id;
             rep_msg.name = msg.name;
             rep_msg.flags = msg.flags;
-            ServerNetManager.Instance.Send2WS(rep_msg);
+            ForServerNetManager.Instance.Send(session.ss_uid, rep_msg);
         }
         /// <summary>
         /// 进入游戏

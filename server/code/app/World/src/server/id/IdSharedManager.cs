@@ -37,13 +37,13 @@ namespace dc
                     QueryMaxCount(obj.id);
                 }
             }
-            if (m_server_start_count < 0 || m_server_start_count > 1048576)// 2 ^ 20 == 1048576
+            if (m_server_start_count < 0 || m_server_start_count > server.MAX_SERVER_START_COUNT)
             {
                 Log.Error("启动次数错误:" + m_server_start_count);
             }
             else
             {
-                Log.Info("服务器启动最大次数:" + m_server_start_count);
+                Log.Info("服务器启动次数:" + m_server_start_count);
             }
         }
         private void QueryMaxCount(ushort game_db_id)
