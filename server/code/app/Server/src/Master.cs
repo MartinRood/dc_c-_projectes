@@ -73,15 +73,19 @@ namespace dc
             DBManager.Instance.Start(ServerConfig.db_info.db_list); 
             ServerNetManager.Instance.Connect2WorldServer(ServerConfig.net_info.ws_ip, ServerConfig.net_info.ws_port);
 
-            DBID db_id = new DBID();
-            db_id.game_id = 100;
 
-            DBEventInfo e_info = new DBEventInfo();
-            e_info.target_char_idx = 10000000002;
-            e_info.source_char_idx = 10000000003;
-            e_info.event_type = eDBEventType.Test;
-            e_info.bin_content.bin_normal_content.data = "测试了";
-            SQLDBEventHandle.InsertDBEvent(e_info, db_id);
+            //TimerManager.Instance.AddOnce(3000, (timer_id, param) =>
+            //{
+            //    DBID db_id = new DBID();
+            //    db_id.game_id = 100;
+            //    DBEventInfo e_info = new DBEventInfo();
+            //    e_info.event_idx = IdSharedManager.Instance.GetNextDbEventIdx();
+            //    e_info.target_char_idx = 10000000002;
+            //    e_info.source_char_idx = 10000000003;
+            //    e_info.event_type = eDBEventType.Test;
+            //    e_info.bin_content.bin_normal_content.data = "测试了";
+            //    SQLDBEventHandle.InsertDBEvent(e_info, db_id);
+            //});
 
             Framework.Instance.MainLoop();
         }

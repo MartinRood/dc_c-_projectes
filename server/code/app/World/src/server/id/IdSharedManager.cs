@@ -25,6 +25,7 @@ namespace dc
         public void Destroy()
         {
         }
+        #region 启动次数
         /// <summary>
         /// 初始化每个gamedb对应的启动次数
         /// </summary>
@@ -66,5 +67,6 @@ namespace dc
             msg.count = m_server_start_count;
             ServerNetManager.Instance.Send(conn_idx, msg);
         }
+        #endregion
     }
 }

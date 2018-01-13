@@ -297,6 +297,7 @@ namespace dc
 
             //存db
             MailInfo mail_info = CommonObjectPools.Spawn<MailInfo>();
+            mail_info.mail_idx = IdSharedManager.Instance.GetNextMailIdx();
             mail_info.mail_type = eMailType.NORMAL;
             mail_info.spid = 0;//普通邮件，不区分渠道id
             mail_info.receiver_idx = info.receiver.char_idx;

@@ -18,6 +18,7 @@ namespace dc
         public static void InsertDBEvent(DBEventInfo info, DBID db_id)
         {
             string sql = "call SP_DB_EVENT_CREATE(" +
+                info.event_idx + "," +
                 info.target_char_idx + "," +
                 info.source_char_idx + "," +
                 (byte)info.event_type + "," +

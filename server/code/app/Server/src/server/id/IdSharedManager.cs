@@ -19,10 +19,19 @@ namespace dc
         /// 服务器启动次数
         /// </summary>
         private long m_base_id = 0;
+
         /// <summary>
         /// 角色id
         /// </summary>
         private int m_cur_char_idx = 0;
+        /// <summary>
+        /// db事件
+        /// </summary>
+        private int m_cur_db_event_idx = 0;
+        /// <summary>
+        /// 邮件
+        /// </summary>
+        private int m_cur_mail_idx = 0;
 
         public void InitServerStartCount(int start_count)
         {
@@ -36,10 +45,23 @@ namespace dc
         /// <summary>
         /// 角色id
         /// </summary>
-        /// <returns></returns>
         public long GetNextCharIdx()
         {
             return (m_base_id + ++m_cur_char_idx);
+        }
+        /// <summary>
+        /// db事件
+        /// </summary>
+        public long GetNextDbEventIdx()
+        {
+            return (m_base_id + ++m_cur_db_event_idx);
+        }
+        /// <summary>
+        /// 邮件
+        /// </summary>
+        public long GetNextMailIdx()
+        {
+            return (m_base_id + ++m_cur_mail_idx);
         }
     }
 }

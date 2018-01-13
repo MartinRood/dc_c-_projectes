@@ -101,8 +101,9 @@ namespace dc
         public static void CreateMail(MailInfo info, DBID db_id)
         {
             string sql = "insert into `mail_box` " +
-            "(mail_type,spid,receiver_idx,sender_idx,sender_name,send_time,expire_time,delivery_time,flags,`subject`,bin_mail_content,last_update_time) " +
+            "(mail_idx, mail_type,spid,receiver_idx,sender_idx,sender_name,send_time,expire_time,delivery_time,flags,`subject`,bin_mail_content,last_update_time) " +
             "values (" +
+            info.mail_idx + "," +
             (byte)info.mail_type + "," +
             info.spid + "," +
             info.receiver_idx + "," +
