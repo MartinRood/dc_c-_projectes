@@ -18,26 +18,20 @@ namespace dc
             Framework.Instance.Setup(Tick);
 
             ClientNetManager.Instance.Setup();
-            NetPressureManager.Instance.Setup();
             LoginPressureManager.Instance.Setup();
             MovePressureManager.Instance.Setup();
-            DBPressureManager.Instance.Setup();
         }
         public void Destroy()
         {
             ClientNetManager.Instance.Destroy();
-            NetPressureManager.Instance.Destroy();
             LoginPressureManager.Instance.Destroy();
             MovePressureManager.Instance.Destroy();
-            DBPressureManager.Instance.Destroy();
         }
         public void Tick()
         {
             ClientNetManager.Instance.Tick();
-            NetPressureManager.Instance.Tick();
             LoginPressureManager.Instance.Tick();
             MovePressureManager.Instance.Tick();
-            DBPressureManager.Instance.Tick();
         }
 
         public void Start()

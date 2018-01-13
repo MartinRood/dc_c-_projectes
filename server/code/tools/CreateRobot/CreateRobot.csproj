@@ -57,10 +57,8 @@
     <Compile Include="src\client\Master.cs" />
     <Compile Include="src\client\net\ClientNetManager.cs" />
     <Compile Include="src\client\net\ServerMsgSend.cs" />
-    <Compile Include="src\client\pressure\DBPressureManager.cs" />
     <Compile Include="src\client\pressure\LoginPressureManager.cs" />
     <Compile Include="src\client\pressure\MovePressureManager.cs" />
-    <Compile Include="src\client\pressure\NetPressureManager.cs" />
     <Compile Include="src\data\idmap\event_id.cs" />
     <Compile Include="src\data\idmap\GlobalID.cs" />
     <Compile Include="src\data\idmap\pressure_id.cs" />
