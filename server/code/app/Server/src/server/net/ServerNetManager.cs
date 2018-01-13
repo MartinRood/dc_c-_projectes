@@ -71,6 +71,8 @@ namespace dc
         }
         public void Connect2GlobalServer(string ip, ushort port)
         {
+            if (string.IsNullOrEmpty(ip)) return;
+
             //只有连接上了世界服，才连接全局服
             if (!IsConnectedWorldServer()) return;
 

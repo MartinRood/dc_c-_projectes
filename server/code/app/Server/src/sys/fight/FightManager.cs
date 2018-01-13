@@ -125,7 +125,7 @@ namespace dc
             {
                 RemovePlayer(char_idx);
             }
-            FightPlayer player = CommonObjectPools.Spawn<FightPlayer>();
+            FightPlayer player = new FightPlayer();
             player.Setup(char_idx);
             m_fight_players.Add(char_idx, player);
 
@@ -137,7 +137,6 @@ namespace dc
             if (m_fight_players.TryGetValue(char_idx, out player))
             {
                 player.Destroy();
-                CommonObjectPools.Despawn(player);
             }
             m_fight_players.Remove(char_idx);
         }

@@ -87,20 +87,20 @@ namespace dc
             //    SQLDBEventHandle.InsertDBEvent(e_info, db_id);
             //});
 
-            TimerManager.Instance.AddOnce(3000, (timer_id, param) =>
-            {
-                DBID db_id = new DBID();
-                db_id.game_id = 100;
-                ItemInfo info = new ItemInfo();
-                info.item_idx = IdSharedManager.Instance.GetNextItemIdx();
-                info.char_idx = 363938360328193;
-                info.type = eItemSubType.AK47;
-                info.bag_type = eBagType.Weapon;
-                info.ui_pos = 1;
-                info.number = 1;
-                info.create_time = (uint)Time.second_time;
-                SQLItemHandle.CreateItem(info, db_id);
-            });
+            //TimerManager.Instance.AddOnce(3000, (timer_id, param) =>
+            //{
+            //    DBID db_id = new DBID();
+            //    db_id.game_id = 100;
+            //    ItemInfo info = new ItemInfo();
+            //    info.item_idx = IdSharedManager.Instance.GetNextItemIdx();
+            //    info.char_idx = 363938360328193;
+            //    info.type = eItemSubType.AK47;
+            //    info.bag_type = eBagType.Weapon;
+            //    info.ui_pos = 1;
+            //    info.number = 1;
+            //    info.create_time = (uint)Time.second_time;
+            //    SQLItemHandle.CreateItem(info, db_id);
+            //});
 
             Framework.Instance.MainLoop();
         }

@@ -108,7 +108,7 @@ namespace dc
                         MailModContent content = mail_info.bin_mail_content.bin_mod_content;
                         foreach(var obj in content.mods)
                         {
-                            player.unit_attr.SetAttrib(obj.type, obj.value_i, obj.value_str);
+                            player.player_attr.SetAttrib(obj.type, obj.value_i, obj.value_str);
                         }
                         list.RemoveAt(i);
                         del_list.Add(mail_info.mail_idx);

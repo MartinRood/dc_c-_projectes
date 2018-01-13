@@ -193,7 +193,7 @@ namespace dc
                     if(is_load)
                     {
                         //创建玩家
-                        Player player = CommonObjectPools.Spawn<Player>();
+                        Player player = new Player();
                         player.client_uid = client_uid;
                         player.LoadData(ss_data);
                         UnitManager.Instance.AddUnit(player);
@@ -222,6 +222,9 @@ namespace dc
                         ss2c.CharacterInfo rep_msg = PacketPools.Get(ss2c.msg.CHARACTER_INFO) as ss2c.CharacterInfo;
                         rep_msg.data.Copy(ss_data);
                         ServerNetManager.Instance.SendProxy(client_uid, rep_msg, false);
+
+                        //初始化内部逻辑
+                        player.OnFirstEnter();
                     }
                     CommonObjectPools.Despawn(ss_data);
                 });

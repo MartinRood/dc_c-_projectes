@@ -115,7 +115,6 @@ namespace dc
                 m_players.Remove(unit.obj_idx);
             }
             m_units.Remove(unit.obj_idx);
-            CommonObjectPools.Despawn(unit);
         }
         public void RemoveUnit(long idx)
         {

@@ -9,7 +9,7 @@ namespace dc
     /// @author hannibal
     /// @time 2017-8-14
     /// </summary>
-    public class FightPlayer : IPoolsObject
+    public class FightPlayer
     {
         private long m_char_idx = 0;
         private eFightStage m_fight_stage = eFightStage.None;
@@ -98,7 +98,7 @@ namespace dc
                 //告诉fs
                 ss2fs.LoginClient msg = PacketPools.Get(ss2fs.msg.LOGIN_CLIENT) as ss2fs.LoginClient;
                 msg.client_uid = player.client_uid;
-                msg.data.Copy(player.unit_attr.player_info);
+                msg.data.Copy(player.player_attr.player_info);
                 ServerNetManager.Instance.Send2FS(player.fs_uid, msg);
 
                 //告诉gs分配给玩家的fs

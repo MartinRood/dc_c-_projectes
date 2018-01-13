@@ -8,7 +8,7 @@ namespace dc
     /// @author hannibal
     /// @time 2016-8-14
     /// </summary>
-    public abstract class Unit : IPoolsObject
+    public abstract class Unit
     {
         protected eUnitType m_unit_type = eUnitType.NONE;
         protected uint m_obj_type = 0;
@@ -17,18 +17,10 @@ namespace dc
         protected uint m_scene_type_idx = 0;
 
         protected Position2D m_pos = new Position2D();
-        protected PlayerAttribute m_unit_attr = null;
+        protected UnitAttribute m_unit_attr = null;
 
         public Unit()
         {
-
-        }
-        public virtual void Init()
-        {
-            m_obj_type = 0;
-            m_obj_idx = 0;
-            m_scene_obj_idx = 0;
-            m_scene_type_idx = 0;
             m_pos.Set(0, 0);
         }
         public virtual void OnEnter()
@@ -105,7 +97,7 @@ namespace dc
         {
             get { return m_pos.y; }
         }
-        public PlayerAttribute unit_attr
+        public UnitAttribute unit_attr
         {
             get { return m_unit_attr; }
         }

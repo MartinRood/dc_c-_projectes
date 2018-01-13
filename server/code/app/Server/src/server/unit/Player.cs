@@ -26,16 +26,6 @@ namespace dc
             m_unit_type = eUnitType.PLAYER;
             m_unit_attr = new PlayerAttribute(this);
             m_player_bag = new PlayerBag();
-        }
-        /// <summary>
-        /// 对象池初始化
-        /// </summary>
-        public override void Init()
-        {
-            base.Init();
-            m_account_idx = 0;
-            m_spid = 0;
-            m_is_dirty = false;
             m_last_save_time = Time.timeSinceStartup;
         }
         public override void OnEnter()
@@ -69,6 +59,13 @@ namespace dc
         {
             base.Update();
         }
+        /// <summary>
+        /// 首次进入
+        /// </summary>
+        public void OnFirstEnter()
+        {
+            m_player_bag.Load(m_obj_idx);
+        }
 
         #region 数据加载和保存
         /// <summary>
@@ -91,18 +88,15 @@ namespace dc
             m_db_id.center_id = ServerConfig.GetDBByAccountIdx(m_account_idx, eDBType.Center);
             m_db_id.log_id = ServerConfig.GetDBByAccountIdx(m_account_idx, eDBType.Log);
 
-            m_unit_attr.player_info.Copy(data);
+            player_attr.player_info.Copy(data);
             m_unit_attr.SetAttribInteger(eUnitModType.UMT_time_last_login, Time.second_time, false, false, false, false, false);
-
-            //逻辑部分
-            m_player_bag.Load(m_obj_idx);
         }      
         /// <summary>
         /// 保存到db
         /// </summary>
         public void Save()
         {
-            SQLCharHandle.SaveCharacterInfo(m_db_id, m_unit_attr.player_info);
+            SQLCharHandle.SaveCharacterInfo(m_db_id, player_attr.player_info);
 
             m_player_bag.Save();
 
@@ -175,16 +169,16 @@ namespace dc
         /// </summary>
         public override void ModifyPos(int x, int y)
         {
-            m_unit_attr.player_info.pos_x = x;
-            m_unit_attr.player_info.pos_y = y;
+            player_attr.player_info.pos_x = x;
+            player_attr.player_info.pos_y = y;
         }
         public override int pos_x
         {
-            get { return m_unit_attr.player_info.pos_x; }
+            get { return player_attr.player_info.pos_x; }
         }
         public override int pos_y
         {
-            get { return m_unit_attr.player_info.pos_y; }
+            get { return player_attr.player_info.pos_y; }
         }
         #endregion
 
@@ -218,6 +212,10 @@ namespace dc
             return player_info;
         }
 
+        public PlayerAttribute player_attr
+        {
+            get { return m_unit_attr as PlayerAttribute; }
+        }
         public ClientUID client_uid
         {
             get { return m_client_uid; }
