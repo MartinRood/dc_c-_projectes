@@ -41,12 +41,16 @@
             this.label35 = new System.Windows.Forms.Label();
             this.label36 = new System.Windows.Forms.Label();
             this.m_tabControl = new System.Windows.Forms.TabControl();
+            this.m_tabUser_StartId = new System.Windows.Forms.TextBox();
+            this.label2 = new System.Windows.Forms.Label();
             this.m_tabUser.SuspendLayout();
             this.m_tabControl.SuspendLayout();
             this.SuspendLayout();
             // 
             // m_tabUser
             // 
+            this.m_tabUser.Controls.Add(this.m_tabUser_StartId);
+            this.m_tabUser.Controls.Add(this.label2);
             this.m_tabUser.Controls.Add(this.m_tabUser_DB);
             this.m_tabUser.Controls.Add(this.label1);
             this.m_tabUser.Controls.Add(this.m_tabLogin_Start);
@@ -76,7 +80,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(28, 60);
+            this.label1.Location = new System.Drawing.Point(26, 60);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(59, 12);
             this.label1.TabIndex = 38;
@@ -105,7 +109,7 @@
             // 
             this.m_tabUser_EndAccount.Location = new System.Drawing.Point(405, 94);
             this.m_tabUser_EndAccount.Name = "m_tabUser_EndAccount";
-            this.m_tabUser_EndAccount.Size = new System.Drawing.Size(173, 21);
+            this.m_tabUser_EndAccount.Size = new System.Drawing.Size(153, 21);
             this.m_tabUser_EndAccount.TabIndex = 30;
             this.m_tabUser_EndAccount.Text = "0";
             // 
@@ -170,6 +174,23 @@
             this.m_tabControl.Size = new System.Drawing.Size(594, 325);
             this.m_tabControl.TabIndex = 0;
             // 
+            // m_tabUser_StartId
+            // 
+            this.m_tabUser_StartId.Location = new System.Drawing.Point(407, 57);
+            this.m_tabUser_StartId.Name = "m_tabUser_StartId";
+            this.m_tabUser_StartId.ReadOnly = true;
+            this.m_tabUser_StartId.Size = new System.Drawing.Size(151, 21);
+            this.m_tabUser_StartId.TabIndex = 41;
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(330, 60);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(71, 12);
+            this.label2.TabIndex = 40;
+            this.label2.Text = "角色开始ID:";
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -203,6 +224,8 @@
         private System.Windows.Forms.TabControl m_tabControl;
         private System.Windows.Forms.TextBox m_tabUser_DB;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.TextBox m_tabUser_StartId;
+        private System.Windows.Forms.Label label2;
 
     }
 }

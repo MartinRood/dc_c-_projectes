@@ -42,14 +42,14 @@ namespace dc
         {
             Stop();
             m_active = true;
-            this.CreateOneUser(m_pressure_info.start_account);
+            this.CreateOneUser(m_pressure_info.start_account, m_pressure_info.start_id);
         }
         private void Stop()
         {
             m_active = false;
         }
 
-        private void CreateOneUser(long account_idx)
+        private void CreateOneUser(long account_idx, long char_idx)
         {
             if (!m_active || account_idx > m_pressure_info.end_account) return;
 
@@ -58,8 +58,8 @@ namespace dc
             create_info.ws_id = 0;
             create_info.ss_id = 0;
             create_info.fs_id = 0;
-            create_info.char_idx = account_idx;
-            create_info.char_name = "test" + account_idx;
+            create_info.char_idx = char_idx;
+            create_info.char_name = "test" + char_idx;
             create_info.char_type = (byte)(MathUtils.Rand_Sign() == 1 ? eSexType.BOY : eSexType.GIRL);
 
             SQLCharHandle.CreateCharacter(account_idx, create_info, (res) =>
@@ -75,7 +75,7 @@ namespace dc
                 }
                 else
                 {
-                    this.CreateOneUser(account_idx + 1);
+                    this.CreateOneUser(account_idx + 1, char_idx + 1);
                 }
             }
             );

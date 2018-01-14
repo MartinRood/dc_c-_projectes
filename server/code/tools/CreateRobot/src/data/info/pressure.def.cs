@@ -11,7 +11,8 @@ namespace dc
         public string ip;
         public ushort port;
         public string db_name;
-        public uint start_account;
-        public uint end_account;
+        public long start_id;       //起始id
+        public long start_account;  //起始账号
+        public long end_account;
     }
 }

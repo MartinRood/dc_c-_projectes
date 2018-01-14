@@ -106,8 +106,8 @@ namespace dc
                     break;
             }
         }
-        #region 登录
-        /*～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～登录～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～*/
+        #region 创建角色
+        /*～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～创建角色～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～*/
         /// <summary>
         /// 登陆测试
         /// </summary>
@@ -130,8 +130,9 @@ namespace dc
                 info.ip = this.m_tabUser_IP.Text;
                 info.port = ushort.Parse(this.m_tabUser_Port.Text);
                 info.db_name = this.m_tabUser_DB.Text;
-                info.start_account = uint.Parse(this.m_tabUser_StartAccount.Text);
-                info.end_account = uint.Parse(this.m_tabUser_EndAccount.Text);
+                info.start_id = long.Parse(this.m_tabUser_StartId.Text);
+                info.start_account = long.Parse(this.m_tabUser_StartAccount.Text);
+                info.end_account = long.Parse(this.m_tabUser_EndAccount.Text);
 
                 m_tabLogin_Start.Enabled = false;
                 EnableTabPage(false, m_tabUser);
