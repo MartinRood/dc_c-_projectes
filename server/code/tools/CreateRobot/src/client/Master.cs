@@ -11,41 +11,26 @@ namespace dc
     /// </summary>
     public class Master : Singleton<Master>
     {
-        private Timer m_timer;
         public void Setup()
         {
-            ServerConfig.Read();
-            Framework.Instance.Setup(Tick);
+            //初始化日志，放最前面
+            Log4Helper.Init(log4net.LogManager.GetLogger("loginfo"), log4net.LogManager.GetLogger("loginfo"), log4net.LogManager.GetLogger("logerror"), log4net.LogManager.GetLogger("logerror"));
 
-            ClientNetManager.Instance.Setup();
-            LoginPressureManager.Instance.Setup();
-            MovePressureManager.Instance.Setup();
+            Log.Info("开启时间(" + DateTime.Now.ToString() + ")");
+            ServerConfig.Read();
+
+            DatabaseManager.Instance.Setup();
+            CreateUserManager.Instance.Setup();
         }
         public void Destroy()
         {
-            ClientNetManager.Instance.Destroy();
-            LoginPressureManager.Instance.Destroy();
-            MovePressureManager.Instance.Destroy();
-        }
-        public void Tick()
-        {
-            ClientNetManager.Instance.Tick();
-            LoginPressureManager.Instance.Tick();
-            MovePressureManager.Instance.Tick();
+            DatabaseManager.Instance.Destroy();
+            CreateUserManager.Instance.Destroy();
         }
 
         public void Start()
         {
-            m_timer = new Timer();
-            m_timer.Interval = 10;
-            m_timer.Tick += Update;
-            m_timer.Start();
-        }        
-        private long tmpLastTime = Time.time;
-        private void Update(object sender, EventArgs e)
-        {
-            Framework.Instance.Update(Time.time - tmpLastTime);
-            tmpLastTime = Time.time;
+            DatabaseManager.Instance.Start();
         }
     }
 }

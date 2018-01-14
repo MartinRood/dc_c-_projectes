@@ -6,7 +6,6 @@ namespace dc
     public enum ePressureType
     {
         None,
-        Login,
-        Move,
+        CreateUser,
     }
 }

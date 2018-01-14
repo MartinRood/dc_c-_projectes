@@ -11,21 +11,12 @@ namespace dc
     public class ClientEventID
     {
         /// <summary>
-        /// 新连接打开
-        /// </summary>
-        public const string NET_CONNECTED_OPEN = "NET_CONNECTED_OPEN";
-        /// <summary>
-        /// 连接关闭
-        /// </summary>
-        public const string NET_CONNECTED_CLOSE = "NET_CONNECTED_CLOSE";
-        /// <summary>
-        /// 切换压力测试
+        /// 切换
         /// </summary>
         public const string SWITCH_PRESSURE = "SWITCH_PRESSURE";
-
         /// <summary>
-        /// 收到数据
+        /// 创建完成
         /// </summary>
-        public const string RECV_DATA = "RECV_DATA";
+        public const string CREATE_COMPLETE = "CREATE_COMPLETE";
     }
 }

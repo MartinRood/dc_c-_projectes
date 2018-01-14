@@ -21,42 +21,41 @@ namespace dc
         }
         private void Init()
         {
+            Control.CheckForIllegalCrossThreadCalls = false;
+            this.RegisterEvent();
+
             for (int i = 0; i < m_tabControl.TabCount; ++i)
             {
                 TabPage tp = m_tabControl.TabPages[i];
                 m_tab_pages.Add(tp);
             }
 
-            this.m_tabLogin_IP.Text = ServerConfig.net_info.login_server_ip;
-            this.m_tabLogin_Port.Text = ServerConfig.net_info.login_server_port.ToString();
-            this.m_tabLogin_ClientCount.Text = ServerConfig.net_info.login_client_count.ToString();
-            this.m_tabLogin_DisconTime.Text = ServerConfig.net_info.login_dis_time.ToString();
-
-            this.m_tabMove_IP.Text = ServerConfig.net_info.move_server_ip;
-            this.m_tabMove_Port.Text = ServerConfig.net_info.move_server_port.ToString();
-            this.m_tabMove_ClientCount.Text = ServerConfig.net_info.move_client_count.ToString();
-            this.m_tabMove_StartAccount.Text = ServerConfig.net_info.move_start_account.ToString();
-            this.m_tabMove_MoveTime.Text = ServerConfig.net_info.move_time.ToString();
+            this.m_tabUser_IP.Text = ServerConfig.db_info.address;
+            this.m_tabUser_Port.Text = ServerConfig.db_info.port.ToString();
+            this.m_tabUser_DB.Text = ServerConfig.db_info.name.ToString();
 
             m_timer = new Timer();
             m_timer.Interval = 1000;
             m_timer.Tick += Update;
             m_timer.Start();
         }
+        protected override void OnClosed(EventArgs e)
+        {
+            this.UnRegisterEvent();
+            base.OnClosed(e);
+        }
         private void Update(object sender, EventArgs e)
         {
             lock (ThreadScheduler.Instance.LogicLock)
             {
                 UpdateTabPage();
-                ClientNetManager.Instance.ResetRecvSendPacket();
             }
         }
         private void UpdateTabPage()
         {
             switch (m_pressure_type)
             {
-                case ePressureType.Login: UpdateLoginTabPage(); break;
-                case ePressureType.Move: UpdateMoveTabPage(); break;
+                case ePressureType.CreateUser: UpdateLoginTabPage(); break;
             }
         }
         /// <summary>
@@ -83,6 +82,30 @@ namespace dc
                 }
             }
         }
+                
+        /*～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～事件～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～*/
+        private void RegisterEvent()
+        {
+            EventController.AddEventListener(ClientEventID.CREATE_COMPLETE, OnGameEvent);
+        }
+        private void UnRegisterEvent()
+        {
+            EventController.RemoveEventListener(ClientEventID.CREATE_COMPLETE, OnGameEvent);
+        }
+        private void OnGameEvent(GameEvent evt)
+        {
+            switch (evt.type)
+            {
+                case ClientEventID.CREATE_COMPLETE:
+                    {
+                        m_tabLogin_Start.Text = "开始";
+                        m_tabLogin_Start.Enabled = true;
+                        EnableTabPage(true, m_tabUser);
+                        EnableLoginTabPage(true);
+                    }
+                    break;
+            }
+        }
         #region 登录
         /*～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～登录～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～*/
         /// <summary>
@@ -94,99 +117,41 @@ namespace dc
         {
             if (m_tabLogin_Start.Text == "停止")
             {
-                m_tabLogin_Start.Enabled = false;
-                ClientNetManager.Instance.CloseAll();
                 m_tabLogin_Start.Text = "开始";
                 m_tabLogin_Start.Enabled = true;
-                EnableTabPage(true, m_tabLogin);
+                EnableTabPage(true, m_tabUser);
                 EnableLoginTabPage(true);
 
-                EventController.TriggerEvent(ClientEventID.SWITCH_PRESSURE, ePressureType.Login, false);
+                EventController.TriggerEvent(ClientEventID.SWITCH_PRESSURE, ePressureType.CreateUser, false);
             }
             else
             {
-                sPressureLoginInfo info = new sPressureLoginInfo();
-                info.ip = this.m_tabLogin_IP.Text;
-                info.port = ushort.Parse(this.m_tabLogin_Port.Text);
-                info.client_count = ushort.Parse(this.m_tabLogin_ClientCount.Text);
-                info.dis_conn_time = float.Parse(this.m_tabLogin_DisconTime.Text);
-                ServerConfig.net_info.login_server_ip = info.ip;
-                ServerConfig.net_info.login_server_port = info.port;
-                ServerConfig.net_info.login_client_count = info.client_count;
+                sCreateUserInfo info = new sCreateUserInfo();
+                info.ip = this.m_tabUser_IP.Text;
+                info.port = ushort.Parse(this.m_tabUser_Port.Text);
+                info.db_name = this.m_tabUser_DB.Text;
+                info.start_account = uint.Parse(this.m_tabUser_StartAccount.Text);
+                info.end_account = uint.Parse(this.m_tabUser_EndAccount.Text);
 
                 m_tabLogin_Start.Enabled = false;
-                EnableTabPage(false, m_tabLogin);
+                EnableTabPage(false, m_tabUser);
                 EnableLoginTabPage(false);
-                m_pressure_type = ePressureType.Login;
+                m_pressure_type = ePressureType.CreateUser;
                 m_tabLogin_Start.Text = "停止";
 
-                EventController.TriggerEvent(ClientEventID.SWITCH_PRESSURE, ePressureType.Login, true, info);
-                ClientNetManager.Instance.StartConnect(info.ip, info.port, info.client_count);
+                EventController.TriggerEvent(ClientEventID.SWITCH_PRESSURE, ePressureType.CreateUser, true, info);
                 m_tabLogin_Start.Enabled = true;
             }
         }
         private void UpdateLoginTabPage()
         {
-            m_tabLogin_CurClientCount.Text = ClientNetManager.Instance.connect_count.ToString();
         }
         private void EnableLoginTabPage(bool b)
         {
-            this.m_tabLogin_IP.Enabled = b;
-            this.m_tabLogin_Port.Enabled = b;
-            this.m_tabLogin_ClientCount.Enabled = b;
-            this.m_tabLogin_DisconTime.Enabled = b;
-        }
-        #endregion
-        #region 移动
-        /*～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～移动～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～*/
-        private void OnMovePageClick(object sender, EventArgs e)
-        {
-            if (m_tabMove_Start.Text == "停止")
-            {
-                m_tabMove_Start.Enabled = false;
-                ClientNetManager.Instance.CloseAll();
-                m_tabMove_Start.Text = "开始";
-                m_tabMove_Start.Enabled = true;
-                EnableTabPage(true, m_tabMove);
-                EnableMoveTabPage(true);
-
-                EventController.TriggerEvent(ClientEventID.SWITCH_PRESSURE, ePressureType.Move, false);
-            }
-            else
-            {
-                sPressureMoveInfo info = new sPressureMoveInfo();
-                info.ip = this.m_tabMove_IP.Text;
-                info.port = ushort.Parse(this.m_tabMove_Port.Text);
-                info.client_count = ushort.Parse(this.m_tabMove_ClientCount.Text);
-                info.move_time = float.Parse(this.m_tabMove_MoveTime.Text);
-                info.start_account = int.Parse(this.m_tabMove_StartAccount.Text);
-                ServerConfig.net_info.move_server_ip = info.ip;
-                ServerConfig.net_info.move_server_port = info.port;
-                ServerConfig.net_info.move_client_count = info.client_count;
-                ServerConfig.net_info.move_start_account = info.start_account;
-
-                m_tabMove_Start.Enabled = false;
-                EnableTabPage(false, m_tabMove);
-                EnableMoveTabPage(false);
-                m_pressure_type = ePressureType.Move;
-                m_tabMove_Start.Text = "停止";
-
-                EventController.TriggerEvent(ClientEventID.SWITCH_PRESSURE, ePressureType.Move, true, info);
-                ClientNetManager.Instance.StartConnect(info.ip, info.port, info.client_count);
-                m_tabMove_Start.Enabled = true;
-            }
-        }
-        private void UpdateMoveTabPage()
-        {
-            m_tabMove_CurClientCount.Text = ClientNetManager.Instance.connect_count.ToString();
-        }
-        private void EnableMoveTabPage(bool b)
-        {
-            this.m_tabMove_IP.Enabled = b;
-            this.m_tabMove_Port.Enabled = b;
-            this.m_tabMove_ClientCount.Enabled = b;
-            this.m_tabMove_StartAccount.Enabled = b;
-            this.m_tabMove_MoveTime.Enabled = b;
+            this.m_tabUser_IP.Enabled = b;
+            this.m_tabUser_Port.Enabled = b;
+            this.m_tabUser_EndAccount.Enabled = b;
+            this.m_tabUser_StartAccount.Enabled = b;
         }
         #endregion
     }
