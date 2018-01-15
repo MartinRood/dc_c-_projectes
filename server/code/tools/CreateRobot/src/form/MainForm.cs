@@ -82,15 +82,24 @@ namespace dc
                 }
             }
         }
+        private void SetCreateProgress(int cur, int total)
+        {
+            if (cur < 0 || total < 0) return;
+            m_tabUser_Progress.Maximum = total;
+            m_tabUser_Progress.Value = cur;
+            m_tabUser_Protxt.Text = cur.ToString() + "/" + total.ToString();
+        }
                 
         /*～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～事件～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～*/
         private void RegisterEvent()
         {
             EventController.AddEventListener(ClientEventID.CREATE_COMPLETE, OnGameEvent);
+            EventController.AddEventListener(ClientEventID.CREATE_PROGRESS, OnGameEvent);
         }
         private void UnRegisterEvent()
         {
             EventController.RemoveEventListener(ClientEventID.CREATE_COMPLETE, OnGameEvent);
+            EventController.RemoveEventListener(ClientEventID.CREATE_PROGRESS, OnGameEvent);
         }
         private void OnGameEvent(GameEvent evt)
         {
@@ -98,10 +107,19 @@ namespace dc
             {
                 case ClientEventID.CREATE_COMPLETE:
                     {
+                        MessageBox.Show("创建完成", "提示", MessageBoxButtons.OK);
                         m_tabLogin_Start.Text = "开始";
                         m_tabLogin_Start.Enabled = true;
                         EnableTabPage(true, m_tabUser);
                         EnableLoginTabPage(true);
+                        this.SetCreateProgress(0, 1);
+                    }
+                    break;
+                case ClientEventID.CREATE_PROGRESS:
+                    {
+                        int cur = evt.Get<int>(0);
+                        int total = evt.Get<int>(1);
+                        this.SetCreateProgress(cur, total);
                     }
                     break;
             }
@@ -115,6 +133,7 @@ namespace dc
         /// <param name="e"></param>
         private void OnLoginPageClick(object sender, EventArgs e)
         {
+            this.SetCreateProgress(0, 1);
             if (m_tabLogin_Start.Text == "停止")
             {
                 m_tabLogin_Start.Text = "开始";
@@ -133,6 +152,16 @@ namespace dc
                 info.start_id = long.Parse(this.m_tabUser_StartId.Text);
                 info.start_account = long.Parse(this.m_tabUser_StartAccount.Text);
                 info.end_account = long.Parse(this.m_tabUser_EndAccount.Text);
+                if (info.start_id < 0)
+                {
+                    MessageBox.Show("请设置有效的角色起始id", "错误", MessageBoxButtons.OK);
+                    return;
+                }
+                if (info.end_account <= info.start_account || info.start_account < 0)
+                {
+                    MessageBox.Show("请设置有效的账号范围", "错误", MessageBoxButtons.OK);
+                    return;
+                }
 
                 m_tabLogin_Start.Enabled = false;
                 EnableTabPage(false, m_tabUser);
@@ -151,6 +180,7 @@ namespace dc
         {
             this.m_tabUser_IP.Enabled = b;
             this.m_tabUser_Port.Enabled = b;
+            this.m_tabLogin_Start.Enabled = b;
             this.m_tabUser_EndAccount.Enabled = b;
             this.m_tabUser_StartAccount.Enabled = b;
         }

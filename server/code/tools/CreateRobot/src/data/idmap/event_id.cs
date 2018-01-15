@@ -18,5 +18,9 @@ namespace dc
         /// 创建完成
         /// </summary>
         public const string CREATE_COMPLETE = "CREATE_COMPLETE";
+        /// <summary>
+        /// 创建进度
+        /// </summary>
+        public const string CREATE_PROGRESS = "CREATE_PROGRESS";
     }
 }

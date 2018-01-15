@@ -34,13 +34,13 @@ namespace dc
         public string move_server_ip;
         public ushort move_server_port;
         public ushort move_client_count;
-        public int move_start_account;//开始账号id
+        public long move_start_account;//开始账号id
         public ushort move_time;//移动时间间隔
         //数据库
         public string db_server_ip;
         public ushort db_server_port;
         public ushort db_client_count;
-        public int db_start_account;//开始账号id
+        public long db_start_account;//开始账号id
         public ushort db_dis_time;//断开时间间隔
     }
 }

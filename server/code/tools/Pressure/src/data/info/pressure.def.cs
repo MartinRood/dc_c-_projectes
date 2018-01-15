@@ -33,7 +33,7 @@ namespace dc
         public ushort port;
         public ushort client_count;
         public float move_time;
-        public int start_account;
+        public long start_account;
     }
     /// <summary>
     /// 数据库测试数据
@@ -44,6 +44,7 @@ namespace dc
         public ushort port;
         public ushort client_count;
         public float dis_conn_time;
-        public int start_account;
+        public long start_account;
+        public long end_account;
     }
 }

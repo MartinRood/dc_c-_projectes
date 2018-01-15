@@ -59,7 +59,7 @@ namespace dc
             create_info.ss_id = 0;
             create_info.fs_id = 0;
             create_info.char_idx = char_idx;
-            create_info.char_name = "test" + char_idx;
+            create_info.char_name = "test" + account_idx;
             create_info.char_type = (byte)(MathUtils.Rand_Sign() == 1 ? eSexType.BOY : eSexType.GIRL);
 
             SQLCharHandle.CreateCharacter(account_idx, create_info, (res) =>
@@ -68,6 +68,7 @@ namespace dc
                 {
                     Log.Error("创建角色失败，账号:" + account_idx + ", error:" + res.ToString());
                 }
+                EventController.TriggerEvent(ClientEventID.CREATE_PROGRESS, (int)(account_idx - m_pressure_info.start_account), (int)(m_pressure_info.end_account - m_pressure_info.start_account));
                 if (account_idx + 1 > m_pressure_info.end_account)
                 {
                     EventController.TriggerEvent(ClientEventID.CREATE_COMPLETE);

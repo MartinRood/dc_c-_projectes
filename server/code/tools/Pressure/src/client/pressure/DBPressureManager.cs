@@ -14,13 +14,13 @@ namespace dc
         private bool m_active = false;
         private Timer m_timer = null;
         private sPressureDBInfo m_pressure_info = null;
+        private List<long> m_accounts = null;
         private Dictionary<long, DBClient> m_connectes = null;
-        private List<DBClient> m_dis_connectes = null;
 
         public DBPressureManager()
         {
+            m_accounts = new List<long>();
             m_connectes = new Dictionary<long, DBClient>();
-            m_dis_connectes = new List<DBClient>();
         }
 
         public void Setup()
@@ -31,8 +31,8 @@ namespace dc
         public void Destroy()
         {
             this.UnRegisterEvent();
+            m_accounts.Clear();
             m_connectes.Clear();
-            m_dis_connectes.Clear();
         }
         public void Tick()
         {
@@ -63,7 +63,7 @@ namespace dc
             Stop();
             m_active = true;
             m_timer = new Timer();
-            m_timer.Interval = 100;
+            m_timer.Interval = (int)(1000.0f * m_pressure_info.dis_conn_time);
             m_timer.Tick += Update;
             m_timer.Start();
         }
@@ -98,6 +98,21 @@ namespace dc
             long conn_idx = MathUtils.RandRange_List<long>(new List<long>(m_connectes.Keys));
             ClientNetManager.Instance.CloseClient(conn_idx);
         }
+        /// <summary>
+        /// 分配一个账号
+        /// </summary>
+        /// <returns></returns>
+        private long ShareAccount()
+        {
+            do
+            {
+                long account_idx =  MathUtils.RandRange((int)m_pressure_info.start_account, (int)m_pressure_info.end_account);
+                if (!m_accounts.Contains(account_idx))
+                    return account_idx;
+            }
+            while (false);
+            return 0;
+        }
         /*～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～事件～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～*/
         private void RegisterEvent()
         {
@@ -123,19 +138,11 @@ namespace dc
                         long conn_idx = evt.Get<long>(0);
                         if (!m_connectes.ContainsKey(conn_idx))
                         {
-                            if(m_dis_connectes.Count > 0)
-                            {
-                                DBClient client = MathUtils.RandRange_List<DBClient>(m_dis_connectes);
-                                client.ReSetup(conn_idx);
-                                m_connectes.Add(conn_idx, client);
-                                m_dis_connectes.Remove(client);
-                            }
-                            else
-                            {
-                                DBClient client = new DBClient();
-                                client.Setup(conn_idx, m_pressure_info.start_account, conn_idx);
-                                m_connectes.Add(conn_idx, client);
-                            }
+                            long account_idx = this.ShareAccount();
+                            DBClient client = new DBClient();
+                            client.Setup(conn_idx, account_idx);
+                            m_connectes.Add(conn_idx, client);
+                            m_accounts.Add(account_idx);
                         }
                     }
                     break;
@@ -147,7 +154,7 @@ namespace dc
                         DBClient client;
                         if(m_connectes.TryGetValue(conn_idx, out client))
                         {
-                            m_dis_connectes.Add(client);
+                            m_accounts.Remove(client.account_idx);
                         }
                         m_connectes.Remove(conn_idx);
                     }
@@ -196,7 +203,6 @@ namespace dc
         protected Dictionary<ushort, MsgProcFunction> m_msg_proc = null;
 
         protected long m_conn_idx = 0;
-        protected long m_start_account_id = 1;
         protected long m_account_idx = 0;
         protected uint m_scene_type = 0;
         protected PlayerInfoForClient m_unit_info;
@@ -205,10 +211,9 @@ namespace dc
         {
             m_msg_proc = new Dictionary<ushort, MsgProcFunction>();
         }
-        public void Setup(long conn_idx, long start_account_idx, long account_idx)
+        public void Setup(long conn_idx, long account_idx)
         {
             m_conn_idx = conn_idx;
-            m_start_account_id = start_account_idx;
             m_account_idx = account_idx;
             m_scene_type = 0;
             this.RegisterHandle();
@@ -273,7 +278,7 @@ namespace dc
             gs2c.EncryptInfo msg = packet as gs2c.EncryptInfo;
             GlobalID.ENCRYPT_KEY = msg.key;
 
-            ServerMsgSend.SendLogin(m_conn_idx, "test" + (int)(m_account_idx + m_start_account_id - 1), "1");
+            ServerMsgSend.SendLogin(m_conn_idx, "test" + m_account_idx, "1");
         }
         /// <summary>
         /// 登陆
@@ -298,7 +303,7 @@ namespace dc
             ss2c.EnumCharacter msg = packet as ss2c.EnumCharacter;
             if (msg.list.Count == 0 || msg.list.Count > 1)
             {
-                ServerMsgSend.SendCreateCharacter(m_conn_idx, "test" + (int)(m_account_idx + m_start_account_id - 1), (uint)eSexType.BOY);
+                ServerMsgSend.SendCreateCharacter(m_conn_idx, "test" + m_account_idx, (uint)eSexType.BOY);
             }
             else
             {
@@ -350,6 +355,10 @@ namespace dc
         public long conn_idx
         {
             get { return m_conn_idx; }
+        }
+        public long account_idx
+        {
+            get { return m_account_idx; }
         }
     }
 }

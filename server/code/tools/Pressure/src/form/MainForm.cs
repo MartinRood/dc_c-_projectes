@@ -233,7 +233,7 @@ namespace dc
                 info.port = ushort.Parse(this.m_tabMove_Port.Text);
                 info.client_count = ushort.Parse(this.m_tabMove_ClientCount.Text);
                 info.move_time = float.Parse(this.m_tabMove_MoveTime.Text);
-                info.start_account = int.Parse(this.m_tabMove_StartAccount.Text);
+                info.start_account = long.Parse(this.m_tabMove_StartAccount.Text);
                 ServerConfig.net_info.move_server_ip = info.ip;
                 ServerConfig.net_info.move_server_port = info.port;
                 ServerConfig.net_info.move_client_count = info.client_count;
@@ -284,8 +284,9 @@ namespace dc
                 info.ip = this.m_tabDB_IP.Text;
                 info.port = ushort.Parse(this.m_tabDB_Port.Text);
                 info.client_count = ushort.Parse(this.m_tabDB_ClientCount.Text);
-                info.dis_conn_time = float.Parse(this.m_tabDB_DisconTime.Text);
                 info.start_account = int.Parse(this.m_tabDB_StartAccount.Text);
+                info.end_account = long.Parse(this.m_tabDB_EndAccount.Text);
+                info.dis_conn_time = float.Parse(this.m_tabDB_DisconTime.Text);
                 ServerConfig.net_info.db_server_ip = info.ip;
                 ServerConfig.net_info.db_server_port = info.port;
                 ServerConfig.net_info.db_client_count = info.client_count;

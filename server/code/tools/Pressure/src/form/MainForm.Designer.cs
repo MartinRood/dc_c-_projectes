@@ -109,6 +109,7 @@
             this.label28 = new System.Windows.Forms.Label();
             this.m_tabMove_IP = new System.Windows.Forms.TextBox();
             this.label29 = new System.Windows.Forms.Label();
+            this.m_tabDB_EndAccount = new System.Windows.Forms.TextBox();
             label30 = new System.Windows.Forms.Label();
             label3 = new System.Windows.Forms.Label();
             this.m_tabControl.SuspendLayout();
@@ -138,7 +139,7 @@
             label3.Name = "label3";
             label3.Size = new System.Drawing.Size(59, 12);
             label3.TabIndex = 66;
-            label3.Text = "开始账号:";
+            label3.Text = "账号范围:";
             // 
             // m_tabControl
             // 
@@ -355,7 +356,7 @@
             // 
             // m_tabNet_Start
             // 
-            this.m_tabNet_Start.Font = new System.Drawing.Font("SimSun", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.m_tabNet_Start.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.m_tabNet_Start.Location = new System.Drawing.Point(233, 257);
             this.m_tabNet_Start.Name = "m_tabNet_Start";
             this.m_tabNet_Start.Size = new System.Drawing.Size(115, 39);
@@ -446,6 +447,7 @@
             // 
             // m_tabDB
             // 
+            this.m_tabDB.Controls.Add(this.m_tabDB_EndAccount);
             this.m_tabDB.Controls.Add(this.m_tabDB_StartAccount);
             this.m_tabDB.Controls.Add(label3);
             this.m_tabDB.Controls.Add(this.m_tabDB_Start);
@@ -472,13 +474,13 @@
             // 
             this.m_tabDB_StartAccount.Location = new System.Drawing.Point(407, 55);
             this.m_tabDB_StartAccount.Name = "m_tabDB_StartAccount";
-            this.m_tabDB_StartAccount.Size = new System.Drawing.Size(151, 21);
+            this.m_tabDB_StartAccount.Size = new System.Drawing.Size(64, 21);
             this.m_tabDB_StartAccount.TabIndex = 67;
             this.m_tabDB_StartAccount.Text = "1";
             // 
             // m_tabDB_Start
             // 
-            this.m_tabDB_Start.Font = new System.Drawing.Font("SimSun", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.m_tabDB_Start.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.m_tabDB_Start.Location = new System.Drawing.Point(233, 257);
             this.m_tabDB_Start.Name = "m_tabDB_Start";
             this.m_tabDB_Start.Size = new System.Drawing.Size(115, 39);
@@ -666,7 +668,7 @@
             // 
             // m_tabLogin_Start
             // 
-            this.m_tabLogin_Start.Font = new System.Drawing.Font("SimSun", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.m_tabLogin_Start.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.m_tabLogin_Start.Location = new System.Drawing.Point(233, 257);
             this.m_tabLogin_Start.Name = "m_tabLogin_Start";
             this.m_tabLogin_Start.Size = new System.Drawing.Size(115, 39);
@@ -781,7 +783,7 @@
             // 
             // m_tabMove_Start
             // 
-            this.m_tabMove_Start.Font = new System.Drawing.Font("SimSun", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.m_tabMove_Start.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.m_tabMove_Start.Location = new System.Drawing.Point(233, 257);
             this.m_tabMove_Start.Name = "m_tabMove_Start";
             this.m_tabMove_Start.Size = new System.Drawing.Size(115, 39);
@@ -900,6 +902,14 @@
             this.label29.TabIndex = 40;
             this.label29.Text = "服务器IP:";
             // 
+            // m_tabDB_EndAccount
+            // 
+            this.m_tabDB_EndAccount.Location = new System.Drawing.Point(477, 55);
+            this.m_tabDB_EndAccount.Name = "m_tabDB_EndAccount";
+            this.m_tabDB_EndAccount.Size = new System.Drawing.Size(80, 21);
+            this.m_tabDB_EndAccount.TabIndex = 70;
+            this.m_tabDB_EndAccount.Text = "10000";
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -1013,6 +1023,7 @@
         private System.Windows.Forms.Label label39;
         private System.Windows.Forms.TextBox m_tabDB_IP;
         private System.Windows.Forms.Label label40;
+        private System.Windows.Forms.TextBox m_tabDB_EndAccount;
     }
 }
 

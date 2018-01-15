@@ -29,6 +29,8 @@
         private void InitializeComponent()
         {
             this.m_tabUser = new System.Windows.Forms.TabPage();
+            this.m_tabUser_StartId = new System.Windows.Forms.TextBox();
+            this.label2 = new System.Windows.Forms.Label();
             this.m_tabUser_DB = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.m_tabLogin_Start = new System.Windows.Forms.Button();
@@ -41,14 +43,18 @@
             this.label35 = new System.Windows.Forms.Label();
             this.label36 = new System.Windows.Forms.Label();
             this.m_tabControl = new System.Windows.Forms.TabControl();
-            this.m_tabUser_StartId = new System.Windows.Forms.TextBox();
-            this.label2 = new System.Windows.Forms.Label();
+            this.m_tabUser_Progress = new System.Windows.Forms.ProgressBar();
+            this.m_tabUser_Protxt = new System.Windows.Forms.TextBox();
+            this.label3 = new System.Windows.Forms.Label();
             this.m_tabUser.SuspendLayout();
             this.m_tabControl.SuspendLayout();
             this.SuspendLayout();
             // 
             // m_tabUser
             // 
+            this.m_tabUser.Controls.Add(this.m_tabUser_Protxt);
+            this.m_tabUser.Controls.Add(this.label3);
+            this.m_tabUser.Controls.Add(this.m_tabUser_Progress);
             this.m_tabUser.Controls.Add(this.m_tabUser_StartId);
             this.m_tabUser.Controls.Add(this.label2);
             this.m_tabUser.Controls.Add(this.m_tabUser_DB);
@@ -68,6 +74,22 @@
             this.m_tabUser.TabIndex = 2;
             this.m_tabUser.Text = "角色";
             this.m_tabUser.UseVisualStyleBackColor = true;
+            // 
+            // m_tabUser_StartId
+            // 
+            this.m_tabUser_StartId.Location = new System.Drawing.Point(407, 57);
+            this.m_tabUser_StartId.Name = "m_tabUser_StartId";
+            this.m_tabUser_StartId.Size = new System.Drawing.Size(151, 21);
+            this.m_tabUser_StartId.TabIndex = 41;
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(330, 60);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(71, 12);
+            this.label2.TabIndex = 40;
+            this.label2.Text = "角色开始ID:";
             // 
             // m_tabUser_DB
             // 
@@ -89,9 +111,9 @@
             // m_tabLogin_Start
             // 
             this.m_tabLogin_Start.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.m_tabLogin_Start.Location = new System.Drawing.Point(227, 248);
+            this.m_tabLogin_Start.Location = new System.Drawing.Point(443, 135);
             this.m_tabLogin_Start.Name = "m_tabLogin_Start";
-            this.m_tabLogin_Start.Size = new System.Drawing.Size(115, 39);
+            this.m_tabLogin_Start.Size = new System.Drawing.Size(115, 40);
             this.m_tabLogin_Start.TabIndex = 35;
             this.m_tabLogin_Start.Text = "开始";
             this.m_tabLogin_Start.UseVisualStyleBackColor = true;
@@ -174,22 +196,30 @@
             this.m_tabControl.Size = new System.Drawing.Size(594, 325);
             this.m_tabControl.TabIndex = 0;
             // 
-            // m_tabUser_StartId
+            // m_tabUser_Progress
             // 
-            this.m_tabUser_StartId.Location = new System.Drawing.Point(407, 57);
-            this.m_tabUser_StartId.Name = "m_tabUser_StartId";
-            this.m_tabUser_StartId.ReadOnly = true;
-            this.m_tabUser_StartId.Size = new System.Drawing.Size(151, 21);
-            this.m_tabUser_StartId.TabIndex = 41;
+            this.m_tabUser_Progress.Location = new System.Drawing.Point(0, 274);
+            this.m_tabUser_Progress.Name = "m_tabUser_Progress";
+            this.m_tabUser_Progress.Size = new System.Drawing.Size(586, 29);
+            this.m_tabUser_Progress.TabIndex = 42;
             // 
-            // label2
+            // m_tabUser_Protxt
             // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(330, 60);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(71, 12);
-            this.label2.TabIndex = 40;
-            this.label2.Text = "角色开始ID:";
+            this.m_tabUser_Protxt.Location = new System.Drawing.Point(91, 247);
+            this.m_tabUser_Protxt.Name = "m_tabUser_Protxt";
+            this.m_tabUser_Protxt.ReadOnly = true;
+            this.m_tabUser_Protxt.Size = new System.Drawing.Size(173, 21);
+            this.m_tabUser_Protxt.TabIndex = 44;
+            this.m_tabUser_Protxt.Text = "0";
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(28, 250);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(59, 12);
+            this.label3.TabIndex = 43;
+            this.label3.Text = "当前进度:";
             // 
             // MainForm
             // 
@@ -226,6 +256,9 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TextBox m_tabUser_StartId;
         private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.ProgressBar m_tabUser_Progress;
+        private System.Windows.Forms.TextBox m_tabUser_Protxt;
+        private System.Windows.Forms.Label label3;
 
     }
 }
