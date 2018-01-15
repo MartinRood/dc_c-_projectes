@@ -15,12 +15,10 @@ namespace dc
         private Timer m_timer = null;
         private sPressureMoveInfo m_pressure_info = null;
         private Dictionary<long, MoveClient> m_connectes = null;
-        private List<MoveClient> m_dis_connectes = null;
 
         public MovePressureManager()
         {
             m_connectes = new Dictionary<long, MoveClient>();
-            m_dis_connectes = new List<MoveClient>();
         }
 
         public void Setup()
@@ -32,7 +30,6 @@ namespace dc
         {
             this.UnRegisterEvent();
             m_connectes.Clear();
-            m_dis_connectes.Clear();
         }
         public void Tick()
         {
@@ -121,19 +118,9 @@ namespace dc
                         long conn_idx = evt.Get<long>(0);
                         if (!m_connectes.ContainsKey(conn_idx))
                         {
-                            if (m_dis_connectes.Count > 0)
-                            {
-                                MoveClient client = MathUtils.RandRange_List<MoveClient>(m_dis_connectes);
-                                client.ReSetup(conn_idx);
-                                m_connectes.Add(conn_idx, client);
-                                m_dis_connectes.Remove(client);
-                            }
-                            else
-                            {
-                                MoveClient client = new MoveClient();
-                                client.Setup(conn_idx, m_pressure_info.start_account, conn_idx);
-                                m_connectes.Add(conn_idx, client);
-                            }
+                            MoveClient client = new MoveClient();
+                            client.Setup(conn_idx, m_pressure_info.start_account + m_connectes.Count);
+                            m_connectes.Add(conn_idx, client);
                         }
                     }
                     break;
@@ -145,7 +132,6 @@ namespace dc
                         MoveClient client;
                         if (m_connectes.TryGetValue(conn_idx, out client))
                         {
-                            m_dis_connectes.Add(client);
                         }
                         m_connectes.Remove(conn_idx);
                     }
@@ -204,10 +190,9 @@ namespace dc
         {
             m_msg_proc = new Dictionary<ushort, MsgProcFunction>();
         }
-        public void Setup(long conn_idx, long start_account_idx, long account_idx)
+        public void Setup(long conn_idx, long account_idx)
         {
             m_conn_idx = conn_idx;
-            m_start_account_id = start_account_idx;
             m_account_idx = account_idx;
             m_scene_type = 0;
             this.RegisterHandle();
@@ -272,7 +257,7 @@ namespace dc
             gs2c.EncryptInfo msg = packet as gs2c.EncryptInfo;
             GlobalID.ENCRYPT_KEY = msg.key;
 
-            ServerMsgSend.SendLogin(m_conn_idx, "test" + (int)(m_account_idx + m_start_account_id - 1), "1");
+            ServerMsgSend.SendLogin(m_conn_idx, "test" + m_account_idx, "1");
         }
         /// <summary>
         /// 登陆
@@ -297,7 +282,7 @@ namespace dc
             ss2c.EnumCharacter msg = packet as ss2c.EnumCharacter;
             if (msg.list.Count == 0 || msg.list.Count > 1)
             {
-                ServerMsgSend.SendCreateCharacter(m_conn_idx, "test" + (int)(m_account_idx + m_start_account_id - 1), (uint)eSexType.BOY);
+                ServerMsgSend.SendCreateCharacter(m_conn_idx, "test" + m_account_idx, (uint)eSexType.BOY);
             }
             else
             {
