@@ -3,14 +3,14 @@ Navicat MySQL Data Transfer
 
 Source Server         : localhost
 Source Server Version : 50517
-Source Host           : localhost:3306
+Source Host           : 127.0.0.1:3306
 Source Database       : dc_memberdb
 
 Target Server Type    : MYSQL
 Target Server Version : 50517
 File Encoding         : 65001
 
-Date: 2018-01-15 18:17:27
+Date: 2018-01-15 21:40:47
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -5206,6 +5206,19 @@ BEGIN
     delete from login_status where login_status.account_id = p_account_id;
     
    	commit;
+END
+;;
+DELIMITER ;
+
+-- ----------------------------
+-- Procedure structure for `SP_RESET_ACCOUNT`
+-- ----------------------------
+DROP PROCEDURE IF EXISTS `SP_RESET_ACCOUNT`;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `SP_RESET_ACCOUNT`()
+BEGIN
+	#Routine body goes here...
+	truncate table account;
 END
 ;;
 DELIMITER ;
