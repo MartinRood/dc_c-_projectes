@@ -4,7 +4,7 @@
 		{
 			"id":0,
 			"type":1,
-			"name":"dc_memberdb",
+			"name":"dc_memberdb_robot",
 			"address": "127.0.0.1",
 			"port":3306,
 			"username":"root",
@@ -15,7 +15,7 @@
 		{
 			"id":100,
 			"type":2,
-			"name":"dc_gamedb",
+			"name":"dc_gamedb_robot",
 			"address": "127.0.0.1",
 			"port":3306,
 			"username":"root",

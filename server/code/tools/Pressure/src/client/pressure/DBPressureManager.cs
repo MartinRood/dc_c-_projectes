@@ -63,7 +63,7 @@ namespace dc
             Stop();
             m_active = true;
             m_timer = new Timer();
-            m_timer.Interval = (int)(1000.0f * m_pressure_info.dis_conn_time);
+            m_timer.Interval = 100;
             m_timer.Tick += Update;
             m_timer.Start();
         }

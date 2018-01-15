@@ -313,6 +313,7 @@ namespace dc
             this.m_tabDB_Port.Enabled = b;
             this.m_tabDB_ClientCount.Enabled = b;
             this.m_tabDB_StartAccount.Enabled = b;
+            this.m_tabDB_EndAccount.Enabled = b;
             this.m_tabDB_DisconTime.Enabled = b;
         }
         #endregion
