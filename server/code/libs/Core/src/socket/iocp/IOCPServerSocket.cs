@@ -271,8 +271,11 @@ namespace dc
             UserToken token;
             if (!m_user_tokens.TryGetValue(conn_idx, out token) || token.Socket == null || !token.Socket.Connected || message == null)
                 return;
-
-            SocketAsyncEventArgs sendArg = SpawnAsyncArgs(m_send_args_pools);
+            SocketAsyncEventArgs sendArg = null;
+            lock(m_sync_lock)
+            {
+                sendArg = SpawnAsyncArgs(m_send_args_pools);
+            }
             sendArg.UserToken = token;
             try
             {
@@ -345,7 +348,10 @@ namespace dc
         {
             if (e.SocketError == SocketError.Success)
             {
-                DespawnAsyncArgs(m_send_args_pools, e);
+                lock(m_sync_lock)
+                {
+                    DespawnAsyncArgs(m_send_args_pools, e);
+                }
             }
             else
             {
@@ -376,11 +382,8 @@ namespace dc
             SocketAsyncEventArgs obj = null;
             if (list.Count > 0)
             {
-                lock (m_pools_lock)
-                {
-                    obj = list[list.Count - 1];
-                    list.RemoveAt(list.Count - 1);
-                }
+                obj = list[list.Count - 1];
+                list.RemoveAt(list.Count - 1);
                 System.Threading.Interlocked.Decrement(ref m_total_remove_count);
                 return obj;
             }
@@ -398,14 +401,12 @@ namespace dc
         private void DespawnAsyncArgs(List<SocketAsyncEventArgs> list, SocketAsyncEventArgs obj)
         {
             if (obj == null) return;
-            lock (m_pools_lock)
+
+            obj.AcceptSocket = null;
+            if (!list.Contains(obj))
             {
-                obj.AcceptSocket = null;
-                if (!list.Contains(obj))
-                {
-                    list.Add(obj);
-                    System.Threading.Interlocked.Increment(ref m_total_remove_count);
-                }
+                list.Add(obj);
+                System.Threading.Interlocked.Increment(ref m_total_remove_count);
             }
         }
         public static string ToString(bool is_print)

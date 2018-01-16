@@ -83,7 +83,7 @@ namespace dc
         {
             if (m_connectes.Count < ServerConfig.net_info.login_client_count)
             {
-                ClientNetManager.Instance.StartConnect(ServerConfig.net_info.login_server_ip, ServerConfig.net_info.login_server_port, 1);
+                ClientNetManager.Instance.StartConnect(ServerConfig.net_info.login_server_ip, ServerConfig.net_info.login_server_port, 1, 0);
                 return true;
             }
             return false;

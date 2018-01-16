@@ -17,6 +17,8 @@ namespace dc
         private ByteArray m_send_by = null;
         private object m_sync_lock = new object();
         private List<long> m_sockets = new List<long>();
+        //需要创建数量
+        private sConnectInfo m_connect_info = new sConnectInfo();
 
         public ClientNetManager()
         {
@@ -33,6 +35,14 @@ namespace dc
         }
         public void Tick()
         {
+            if (m_connect_info.count > 0 && Time.timeSinceStartup - m_connect_info.last_create_time >= m_connect_info.offset_time)
+            {
+                string host = "ws://" + m_connect_info.ip + ":" + m_connect_info.port;
+                NetConnectManager.Instance.ConnectTo(m_connect_info.ip, m_connect_info.port, OnAcceptConnect, OnMessageReveived, OnConnectClose);
+                //NetConnectManager.Instance.ConnectTo(host, OnAcceptConnect, OnMessageReveived, OnConnectClose);
+                m_connect_info.count--;
+                m_connect_info.last_create_time = Time.timeSinceStartup;
+            }
         }
         /// <summary>
         /// 开启连接
@@ -40,15 +50,12 @@ namespace dc
         /// <param name="ip"></param>
         /// <param name="port"></param>
         /// <param name="count">连接数量</param>
-        public void StartConnect(string ip, ushort port, int count)
+        public void StartConnect(string ip, ushort port, int count, int offset_time)
         {
-            string host = "ws://" + ip + ":" + port;
-            for(int i = 0; i < count; ++i)
-            {
-                NetConnectManager.Instance.ConnectTo(ip, port, OnAcceptConnect, OnMessageReveived, OnConnectClose);
-                //NetConnectManager.Instance.ConnectTo(host, OnAcceptConnect, OnMessageReveived, OnConnectClose);
-                System.Threading.Thread.Sleep(5);
-            }
+            m_connect_info.ip = ip;
+            m_connect_info.port = port;
+            m_connect_info.count = count;
+            m_connect_info.offset_time = offset_time;
         }
         public void CloseAll()
         {
@@ -148,5 +155,14 @@ namespace dc
             m_recv_msg_size += data.Available + NetID.PacketHeadSize + 2;
             EventController.TriggerEvent(ClientEventID.RECV_DATA, conn_idx, header, data);
         }
+    }
+
+    class sConnectInfo
+    {
+        public string ip = "";
+        public ushort port = 0;
+        public int count = 0;
+        public int offset_time = 0;
+        public long last_create_time = 0;
     }
 }

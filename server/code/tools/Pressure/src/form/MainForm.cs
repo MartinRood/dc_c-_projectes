@@ -136,7 +136,7 @@ namespace dc
                 m_tabNet_Start.Text = "停止";
 
                 EventController.TriggerEvent(ClientEventID.SWITCH_PRESSURE, ePressureType.Net, true, info);
-                ClientNetManager.Instance.StartConnect(info.ip, info.port, info.client_count);
+                ClientNetManager.Instance.StartConnect(info.ip, info.port, info.client_count, 5);
                 m_tabNet_Start.Enabled = true;
             }
         }
@@ -195,7 +195,7 @@ namespace dc
                 m_tabLogin_Start.Text = "停止";
 
                 EventController.TriggerEvent(ClientEventID.SWITCH_PRESSURE, ePressureType.Login, true, info);
-                ClientNetManager.Instance.StartConnect(info.ip, info.port, info.client_count);
+                ClientNetManager.Instance.StartConnect(info.ip, info.port, info.client_count, 8);
                 m_tabLogin_Start.Enabled = true;
             }
         }
@@ -246,7 +246,7 @@ namespace dc
                 m_tabMove_Start.Text = "停止";
 
                 EventController.TriggerEvent(ClientEventID.SWITCH_PRESSURE, ePressureType.Move, true, info);
-                ClientNetManager.Instance.StartConnect(info.ip, info.port, info.client_count);
+                ClientNetManager.Instance.StartConnect(info.ip, info.port, info.client_count, 10);
                 m_tabMove_Start.Enabled = true;
             }
         }
@@ -299,7 +299,7 @@ namespace dc
                 m_tabDB_Start.Text = "停止";
 
                 EventController.TriggerEvent(ClientEventID.SWITCH_PRESSURE, ePressureType.DB, true, info);
-                ClientNetManager.Instance.StartConnect(info.ip, info.port, info.client_count);
+                ClientNetManager.Instance.StartConnect(info.ip, info.port, info.client_count, 8);
                 m_tabDB_Start.Enabled = true;
             }
         }
