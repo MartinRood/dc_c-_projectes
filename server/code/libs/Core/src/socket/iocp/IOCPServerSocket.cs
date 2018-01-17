@@ -231,7 +231,7 @@ namespace dc
             lock(m_sync_lock)
             {
                 SocketAsyncEventArgs recvEventArgs = SpawnAsyncArgs(m_recv_args_pools);
-                long conn_idx = ++m_share_conn_idx;
+                long conn_idx = System.Threading.Interlocked.Increment(ref m_share_conn_idx);
                 UserToken userToken = (UserToken)recvEventArgs.UserToken;
                 userToken.ConnId = conn_idx;
                 userToken.Socket = e.AcceptSocket;
@@ -271,11 +271,8 @@ namespace dc
             UserToken token;
             if (!m_user_tokens.TryGetValue(conn_idx, out token) || token.Socket == null || !token.Socket.Connected || message == null)
                 return;
-            SocketAsyncEventArgs sendArg = null;
-            lock(m_sync_lock)
-            {
-                sendArg = SpawnAsyncArgs(m_send_args_pools);
-            }
+
+            SocketAsyncEventArgs sendArg = SpawnAsyncArgs(m_send_args_pools);
             sendArg.UserToken = token;
             try
             {
@@ -348,10 +345,7 @@ namespace dc
         {
             if (e.SocketError == SocketError.Success)
             {
-                lock(m_sync_lock)
-                {
-                    DespawnAsyncArgs(m_send_args_pools, e);
-                }
+                DespawnAsyncArgs(m_send_args_pools, e);
             }
             else
             {
@@ -382,8 +376,11 @@ namespace dc
             SocketAsyncEventArgs obj = null;
             if (list.Count > 0)
             {
-                obj = list[list.Count - 1];
-                list.RemoveAt(list.Count - 1);
+                lock (m_pools_lock)
+                {
+                    obj = list[list.Count - 1];
+                    list.RemoveAt(list.Count - 1);
+                }
                 System.Threading.Interlocked.Decrement(ref m_total_remove_count);
                 return obj;
             }
@@ -401,12 +398,14 @@ namespace dc
         private void DespawnAsyncArgs(List<SocketAsyncEventArgs> list, SocketAsyncEventArgs obj)
         {
             if (obj == null) return;
-
             obj.AcceptSocket = null;
-            if (!list.Contains(obj))
+            lock (m_pools_lock)
             {
-                list.Add(obj);
-                System.Threading.Interlocked.Increment(ref m_total_remove_count);
+                if (!list.Contains(obj))
+                {
+                    list.Add(obj);
+                    System.Threading.Interlocked.Increment(ref m_total_remove_count);
+                }
             }
         }
         public static string ToString(bool is_print)
