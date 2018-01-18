@@ -48,7 +48,7 @@ namespace dc
             ss2ws.LoginClient msg = packet as ss2ws.LoginClient;
             //加入管理器
             UnitManager.Instance.HandleLogin(msg.client_uid, msg.server_uid, msg.data);
-            Log.Debug("玩家进入游戏:" + msg.data.char_idx);
+            //Log.Debug("玩家进入游戏:" + msg.data.char_idx);
         }
         /// <summary>
         /// 账号登出
@@ -57,7 +57,7 @@ namespace dc
         {
             ss2ws.LogoutClient msg = packet as ss2ws.LogoutClient;
             UnitManager.Instance.HandleLogout(msg.char_idx);
-            Log.Debug("玩家离开游戏:" + msg.char_idx);
+            //Log.Debug("玩家离开游戏:" + msg.char_idx);
         }
         /// <summary>
         /// 检测在线

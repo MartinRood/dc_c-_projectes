@@ -10,7 +10,7 @@ namespace dc
     /// @author hannibal
     /// @time 2016-9-14
     /// </summary>
-    public class Unit : IPoolsObject
+    public class Unit
     {
         private long m_char_idx = 0;
         private ClientUID m_client_uid;             //所在client，gate     
@@ -23,11 +23,7 @@ namespace dc
         public Unit()
         {
         }
-        public void Init()
-        {
-            m_last_active_time = 0;
-            m_is_send_check_online = false;
-        }
+
         public void Setup(ClientUID client_uid, InterServerID srv_uid, PlayerInfoForWS info)
         {
             m_char_idx = info.char_idx;
@@ -68,7 +64,7 @@ namespace dc
             //超过时间没有活跃，检测是否还在线
             if (!m_is_send_check_online && Time.timeSinceStartup - m_last_active_time >= GlobalID.TOTAL_CHECK_ONLINE_TIME * 1000)
             {
-                this.UpdateCheckOnline();
+                this.SendCheckOnline();
             }
         }
         /// <summary>

@@ -16,7 +16,7 @@ namespace dc
     public sealed class IOCPClientSocket
     {
         private Socket m_socket = null;           //监听Socket
-        private object m_sync_lock = new object();
+        private object m_sync_buff_lock = new object();
         private byte[] m_read_buffer = new byte[SocketUtils.SendRecvMaxSize];   //读缓存
         private byte[] m_write_buffer = new byte[SocketUtils.SendRecvMaxSize];   //写缓存
 
@@ -94,14 +94,12 @@ namespace dc
             System.Threading.Thread.Sleep(100);//让连接线程等等上层主线程
             if(e.SocketError == SocketError.Success)
             {
-                lock(m_sync_lock)
-                {
-                    this.StartReceive(e);
-                    if (OnOpen != null)OnOpen(0);
-                }
+                this.StartReceive(e);
+                if (OnOpen != null) OnOpen(0);
             }
             else
             {
+                Log.Warning("连接失败:" + e.SocketError.ToString());
                 this.Close();
             }
         }  
@@ -111,28 +109,26 @@ namespace dc
         /// </summary>
         public void Close()
         {
-            lock (m_sync_lock)
+            if (m_socket != null)
             {
+                try
+                {
+                    m_socket.Shutdown(SocketShutdown.Both);
+                }
+                catch (Exception) { }
                 if (m_socket != null)
                 {
-                    try
-                    {
-                        m_socket.Shutdown(SocketShutdown.Both);
-                    }
-                    catch (Exception)
-                    {
-                    }
                     m_socket.Close();
                     m_socket = null;
                 }
-                if (OnClose != null)
-                {
-                    OnClose(0);
-                    OnClose = null;
-                }
-                OnOpen = null;
-                OnMessage = null;
             }
+            if (OnClose != null)
+            {
+                OnClose(0);
+                OnClose = null;
+            }
+            OnOpen = null;
+            OnMessage = null;
         }
         public Socket socket
         {
@@ -196,7 +192,7 @@ namespace dc
                 if (e.BytesTransferred > 0 && e.SocketError == SocketError.Success)
                 {
                     //读取数据
-                    lock (m_sync_lock)
+                    lock (m_sync_buff_lock)
                     {
                         Array.Copy(e.Buffer, e.Offset, m_read_buffer, 0, e.BytesTransferred);
                         if (OnMessage != null)OnMessage(0, m_read_buffer, e.BytesTransferred);
@@ -230,7 +226,7 @@ namespace dc
         }
 
         /*～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～对象池管理～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～*/
-        private object m_poolsLock = new object();
+        private object m_pools_lock = new object();
         private static int m_total_new_count = 0;
         private static int m_total_remove_count = 0;
         private SocketAsyncEventArgs SpawnAsyncArgs()
@@ -238,7 +234,7 @@ namespace dc
             SocketAsyncEventArgs obj = null;
             if (m_send_args_pools.Count > 0)
             {
-                lock (m_poolsLock)
+                lock (m_pools_lock)
                 {
                     obj = m_send_args_pools[m_send_args_pools.Count - 1];
                     m_send_args_pools.RemoveAt(m_send_args_pools.Count - 1);
@@ -259,7 +255,7 @@ namespace dc
         private void DespawnAsyncArgs(SocketAsyncEventArgs obj)
         {
             if (obj == null) return;
-            lock (m_poolsLock)
+            lock (m_pools_lock)
             {
                 obj.AcceptSocket = null;
                 if (!m_send_args_pools.Contains(obj))

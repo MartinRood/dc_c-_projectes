@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
@@ -16,11 +17,13 @@ namespace dc
     public sealed class IOCPServerSocket
     {
         private long m_share_conn_idx = 0;
+        private bool m_is_close = false;
         private Socket m_socket = null;           //监听Socket
         private object m_sync_lock = new object();
+        private object m_sync_buff_lock = new object();
         private byte[] m_read_buffer = new byte[SocketUtils.SendRecvMaxSize];   //读缓存
 
-        private Dictionary<long, UserToken> m_user_tokens = null;
+        private ConcurrentDictionary<long, UserToken> m_user_tokens = null;
         private List<SocketAsyncEventArgs> m_recv_args_pools = null;
         private List<SocketAsyncEventArgs> m_send_args_pools = null;
 
@@ -55,7 +58,7 @@ namespace dc
 
         public IOCPServerSocket()
         {
-            m_user_tokens = new Dictionary<long, UserToken>();
+            m_user_tokens = new ConcurrentDictionary<long, UserToken>();
             m_recv_args_pools = new List<SocketAsyncEventArgs>();
             m_send_args_pools = new List<SocketAsyncEventArgs>();
         }
@@ -66,6 +69,7 @@ namespace dc
         /// <param name="port"></param>
         public bool Start(ushort port)
         {
+            m_is_close = false;
             try
             {
                 m_socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
@@ -96,6 +100,7 @@ namespace dc
         /// </summary>
         public void Close()
         {
+            m_is_close = true;
             lock (m_sync_lock)
             {
                 Socket _socket = null;
@@ -133,30 +138,29 @@ namespace dc
         }
 
         /// <summary>
-        /// 主动关闭
+        /// 主动关闭，外部逻辑调用
         /// </summary>
         /// <param name="token"></param>
         public void CloseConn(long conn_idx)
         {
             UserToken token = null;
-            lock (m_sync_lock)
+
+            if (m_user_tokens.TryGetValue(conn_idx, out token))
             {
-                if (m_user_tokens.TryGetValue(conn_idx, out token))
+                if (token.Socket != null)
                 {
-                    if (token.Socket != null)
+                    try
                     {
-                        try
-                        {
-                            token.Socket.Shutdown(SocketShutdown.Both);
-                        }
-                        catch (Exception) { }
-                        token.Socket.Close();
-                        token.Socket = null;
+                        token.Socket.Shutdown(SocketShutdown.Both);
                     }
+                    catch (Exception) { }
+                    token.Socket.Close();
+                    token.Socket = null;
                 }
-                m_user_tokens.Remove(token.ConnId);
-                if (OnClose != null) OnClose(conn_idx);
             }
+            m_user_tokens.TryRemove(conn_idx, out token);
+            if (OnClose != null) OnClose(conn_idx);
+            
         }
         /// <summary>
         /// 关闭客户端:内部出现错误时调用
@@ -167,22 +171,23 @@ namespace dc
             UserToken token = e.UserToken as UserToken;
             if (token != null)
             {
-                lock (m_sync_lock)
+                long conn_idx = token.ConnId;
+                if (token.Socket != null)
                 {
-                    if (token.Socket != null)
+                    try
                     {
-                        try
-                        {
-                            token.Socket.Shutdown(SocketShutdown.Send);
-                        }
-                        catch (Exception) { }
+                        token.Socket.Shutdown(SocketShutdown.Send);
+                    }
+                    catch (Exception) { }
+                    if (token != null && token.Socket != null)
+                    {
                         token.Socket.Close();
                         token.Socket = null;
                     }
-                    m_user_tokens.Remove(token.ConnId);
-                    DespawnAsyncArgs(m_recv_args_pools, e);
-                    if (OnClose != null) OnClose(token.ConnId);
                 }
+                m_user_tokens.TryRemove(conn_idx, out token);
+                DespawnAsyncArgs(m_recv_args_pools, e);
+                if (OnClose != null) OnClose(conn_idx);
             }
         }
         public Socket socket
@@ -220,7 +225,7 @@ namespace dc
         }
         private void ProcessAccept(SocketAsyncEventArgs e)
         {
-            if (m_socket == null) return;
+            if (m_socket == null || m_is_close) return;
 
             if (e.SocketError != SocketError.Success)
             {
@@ -228,34 +233,32 @@ namespace dc
                 return;
             }
 
-            lock(m_sync_lock)
-            {
-                SocketAsyncEventArgs recvEventArgs = SpawnAsyncArgs(m_recv_args_pools);
-                long conn_idx = System.Threading.Interlocked.Increment(ref m_share_conn_idx);
-                UserToken userToken = (UserToken)recvEventArgs.UserToken;
-                userToken.ConnId = conn_idx;
-                userToken.Socket = e.AcceptSocket;
-                userToken.Remote = e.AcceptSocket.RemoteEndPoint;
-                m_user_tokens.Add(conn_idx, userToken);
-                if (OnOpen != null) OnOpen(conn_idx);
+            SocketAsyncEventArgs recvEventArgs = SpawnAsyncArgs(m_recv_args_pools);
+            long conn_idx = System.Threading.Interlocked.Increment(ref m_share_conn_idx);
+            UserToken userToken = (UserToken)recvEventArgs.UserToken;
+            userToken.ConnId = conn_idx;
+            userToken.Socket = e.AcceptSocket;
+            userToken.Remote = e.AcceptSocket.RemoteEndPoint;
+            m_user_tokens.TryAdd(conn_idx, userToken);
+            if (OnOpen != null) OnOpen(conn_idx);
                 
-                //连接成功后，有可能被踢出，需要再次判断是否有效
-                if (m_user_tokens.ContainsKey(conn_idx))
+            //连接成功后，有可能被踢出，需要再次判断是否有效
+            if (m_user_tokens.ContainsKey(conn_idx))
+            {
+                try
                 {
-                    try
+                    if (!e.AcceptSocket.ReceiveAsync(recvEventArgs))
                     {
-                        if (!e.AcceptSocket.ReceiveAsync(recvEventArgs))
-                        {
-                            ProcessReceive(recvEventArgs);
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        DespawnAsyncArgs(m_recv_args_pools, recvEventArgs);
-                        Log.Exception(ex);
+                        ProcessReceive(recvEventArgs);
                     }
                 }
+                catch (Exception ex)
+                {
+                    DespawnAsyncArgs(m_recv_args_pools, recvEventArgs);
+                    Log.Exception(ex);
+                }
             }
+            
             StartAccept(e);
         }
 
@@ -268,6 +271,8 @@ namespace dc
         /// <returns></returns>
         public void Send(long conn_idx, byte[] message, int offset, int count)
         {
+            if(m_is_close)return;
+
             UserToken token;
             if (!m_user_tokens.TryGetValue(conn_idx, out token) || token.Socket == null || !token.Socket.Connected || message == null)
                 return;
@@ -313,21 +318,21 @@ namespace dc
                 if (e.BytesTransferred > 0 && e.SocketError == SocketError.Success)
                 {
                     //读取数据
-                    lock (m_sync_lock)
+                    lock (m_sync_buff_lock)
                     {
                         Array.Copy(e.Buffer, e.Offset, m_read_buffer, 0, e.BytesTransferred);
-                        if (OnMessage != null)OnMessage(token.ConnId, m_read_buffer, e.BytesTransferred);
+                        if (OnMessage != null && !m_is_close) OnMessage(token.ConnId, m_read_buffer, e.BytesTransferred);
+                    }
 
-                        //派发消息的时候，有可能上层逻辑关闭了当前连接，必须再判断一次当前连接是否正常
-                        if (m_user_tokens.ContainsKey(token.ConnId))
-                        {
-                            if (token.Socket != null && token.Socket.Connected && !token.Socket.ReceiveAsync(e))
-                                this.ProcessReceive(e);
-                        }
-                        else
-                        {
-                            DespawnAsyncArgs(m_recv_args_pools, e);
-                        }
+                    //派发消息的时候，有可能上层逻辑关闭了当前连接，必须再判断一次当前连接是否正常
+                    if (m_user_tokens.ContainsKey(token.ConnId))
+                    {
+                        if (token.Socket != null && token.Socket.Connected && !token.Socket.ReceiveAsync(e))
+                            this.ProcessReceive(e);
+                    }
+                    else
+                    {
+                        DespawnAsyncArgs(m_recv_args_pools, e);
                     }
                 }
                 else

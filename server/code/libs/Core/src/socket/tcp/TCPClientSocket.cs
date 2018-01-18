@@ -14,7 +14,6 @@ namespace dc
     public sealed class TCPClientSocket
     {
         private Socket m_socket = null;
-        private object m_sync_lock = new object();
         private byte[] m_recv_buffer = new byte[SocketUtils.SendRecvMaxSize];   //读缓存
         private byte[] m_send_buffer = new byte[SocketUtils.SendRecvMaxSize];   //写缓存
         private SendRecvBufferPools m_buffer_pools = null;
@@ -55,26 +54,26 @@ namespace dc
         /// </summary>
         public void Close()
         {
-            lock (m_sync_lock)
+            if (m_socket != null)
             {
+                try
+                {
+                    m_socket.Shutdown(SocketShutdown.Both);
+                }
+                catch (Exception) { }
                 if (m_socket != null)
                 {
-                    try
-                    {
-                        m_socket.Shutdown(SocketShutdown.Both);
-                    }
-                    catch (Exception) { }
                     m_socket.Close();
                     m_socket = null;
                 }
-                if (OnClose != null)
-                {
-                    OnClose.Invoke(0);
-                    OnClose = null;
-                }
-                OnOpen = null;
-                OnMessage = null;
             }
+            if (OnClose != null)
+            {
+                OnClose.Invoke(0);
+                OnClose = null;
+            }
+            OnOpen = null;
+            OnMessage = null;
         }
         public bool Connect(string ip, ushort port)
         {
@@ -110,16 +109,13 @@ namespace dc
             ar.AsyncWaitHandle.Close();
             try
             {
-                lock (m_sync_lock)
-                {
-                    client.EndConnect(ar);
-                    this.BeginReceive();
-                    if (OnOpen != null) OnOpen.Invoke(0);
-                }
+                client.EndConnect(ar);
+                this.BeginReceive();
+                if (OnOpen != null) OnOpen.Invoke(0);
             }
             catch (Exception e)
             {
-                Log.Error("连接失败:" + e.Message);
+                Log.Warning("连接失败:" + e.Message);
                 this.Close();
             }
         }
@@ -137,22 +133,19 @@ namespace dc
             try
             {
                 ar.AsyncWaitHandle.Close();
-                lock (m_sync_lock)
-                {
-                    if (m_socket == null) return;
-                    byte[] buf = (byte[])ar.AsyncState;
-                    int len = m_socket.EndReceive(ar);
+                if (m_socket == null) return;
+                byte[] buf = (byte[])ar.AsyncState;
+                int len = m_socket.EndReceive(ar);
 
-                    if (len > 0)
-                    {
-                        if (OnMessage != null) OnMessage.Invoke(0, buf, len);
-                        this.BeginReceive();
-                    }
-                    else
-                    {
-                        this.Close();
-                        return;
-                    }
+                if (len > 0)
+                {
+                    if (OnMessage != null) OnMessage.Invoke(0, buf, len);
+                    this.BeginReceive();
+                }
+                else
+                {
+                    this.Close();
+                    return;
                 }
             }
             catch (SocketException e)

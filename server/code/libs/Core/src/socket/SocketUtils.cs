@@ -12,7 +12,7 @@ namespace dc
 
         /// <summary>
         /// 保活
-        /// TODO:网上找的，据说很牛逼，是否有效需要验证
+        /// TODO:网上找的，据说很牛逼，反正是没看懂
         /// </summary>
         /// <param name="socket"></param>
         /// <param name="keepalive_time">多长时间后开始第一次探测（单位：毫秒）</param>

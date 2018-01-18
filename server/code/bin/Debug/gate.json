@@ -7,6 +7,6 @@
 	"port_for_client":7000,
 	"ip_for_server":"127.0.0.1",
 	"port_for_server":8000,
-	"speed_hack_check":1,
+	"speed_hack_check":0,
 	"max_connected":5000
 }

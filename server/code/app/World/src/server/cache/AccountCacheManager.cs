@@ -47,7 +47,7 @@ namespace dc
             {
                 //TODO:可以考虑放到另外一个线程去执行
                 FreeUnusedMemery();
-                tmpLastUpdate = Time.timeSinceStartup + 5 * 60 * 1000;//每5分钟执行一次
+                tmpLastUpdate = Time.timeSinceStartup + GlobalID.TOTAL_FREE_UNUSE_ACCOUNT_TIME * 1000;//每5分钟执行一次
             }
         }
         #region 事件
@@ -162,6 +162,8 @@ namespace dc
         {
             List<CacheAccountData> list = CollectOffline();
             if (list.Count <= 0) return;
+
+            Log.Info("需要释放的缓存账号数量:" + list.Count);
 
             ///7天前的数据，先释放
             int leave_count = GlobalID.TOTAL_RELEASE_CACHE_ACCOUNT_PER;

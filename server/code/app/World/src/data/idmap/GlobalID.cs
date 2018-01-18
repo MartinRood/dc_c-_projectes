@@ -21,12 +21,16 @@ namespace dc
         public static int TOTAL_CHECK_ONLINE_TIME = 60 * 10;
 
         /// <summary>
+        /// 释放缓存账号时间间隔(单位：秒)
+        /// </summary>
+        public static int TOTAL_FREE_UNUSE_ACCOUNT_TIME = 60 * 5;
+        /// <summary>
         /// 最大缓存账号数据
         /// </summary>
-        public static int MAX_CACHE_ACCOUNT_COUNT = 100000;
+        public static int MAX_CACHE_ACCOUNT_COUNT = 10000;
         /// <summary>
         /// 单次最多回收的账号数量
         /// </summary>
-        public static int TOTAL_RELEASE_CACHE_ACCOUNT_PER = 1000;
+        public static int TOTAL_RELEASE_CACHE_ACCOUNT_PER = 100;
     }
 }
