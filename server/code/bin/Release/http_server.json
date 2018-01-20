@@ -1,0 +1,15 @@
+{
+	"log_level": 0,
+	"port_for_server":8090,
+	"db_list":
+	[
+		{
+			"id":1,
+			"name":"dc_http",
+			"address": "127.0.0.1",
+			"port":3306,
+			"username":"root",
+			"password":"root"
+		}
+	]
+}
