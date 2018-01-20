@@ -13,7 +13,7 @@ namespace dc
         /// <summary>
         /// 缓冲的账号角色列表
         /// </summary>
-        private Dictionary<string, CacheAccountData> m_chache_account = null;
+        private Dictionary<string, CacheAccountData> m_cache_account = null;
         /// <summary>
         /// 账号->账号名
         /// </summary>
@@ -21,7 +21,7 @@ namespace dc
 
         public AccountCacheManager()
         {
-            m_chache_account = new Dictionary<string, CacheAccountData>();
+            m_cache_account = new Dictionary<string, CacheAccountData>();
             m_account_2_name = new Dictionary<long, string>();
         }
 
@@ -32,11 +32,11 @@ namespace dc
         public void Destroy()
         {
             this.UnRegisterEvent();
-            foreach (var obj in m_chache_account)
+            foreach (var obj in m_cache_account)
             {
                 CommonObjectPools.Despawn(obj.Value);
             }
-            m_chache_account.Clear();
+            m_cache_account.Clear();
             m_account_2_name.Clear();
         }
         private long tmpLastUpdate = 0;
@@ -105,7 +105,7 @@ namespace dc
                 if (m_account_2_name.TryGetValue(account_idx, out account_name))
                 {
                     CacheAccountData cache_chars;
-                    if (m_chache_account.TryGetValue(account_name, out cache_chars))
+                    if (m_cache_account.TryGetValue(account_name, out cache_chars))
                         cache_chars.logout_time = time;
                 }
             }
@@ -120,7 +120,7 @@ namespace dc
             CacheAccountData cache_chars = CommonObjectPools.Spawn<CacheAccountData>();
             cache_chars.logout_time = Time.second_time;
             cache_chars.account_data = account_data;
-            m_chache_account.Add(account_name, cache_chars);
+            m_cache_account.Add(account_name, cache_chars);
             m_account_2_name.Add(account_data.account_idx, account_name);
 
             return true;
@@ -131,11 +131,11 @@ namespace dc
             if(m_account_2_name.TryGetValue(account_idx, out account_name))
             {
                 CacheAccountData cache_chars;
-                if (m_chache_account.TryGetValue(account_name, out cache_chars))
+                if (m_cache_account.TryGetValue(account_name, out cache_chars))
                 {
                     CommonObjectPools.Despawn(cache_chars);
                 }
-                m_chache_account.Remove(account_name);
+                m_cache_account.Remove(account_name);
             }
             m_account_2_name.Remove(account_idx);
         }
@@ -145,12 +145,17 @@ namespace dc
         public bool GetAccountData(string account_name, ref AccountData account_data)
         {
             CacheAccountData cache_chars;
-            if (m_chache_account.TryGetValue(account_name, out cache_chars))
+            if (m_cache_account.TryGetValue(account_name, out cache_chars))
             {
                 account_data = cache_chars.account_data;
                 return true;
             }
             return false;
+        }
+
+        public int GetCacheCount()
+        {
+            return m_cache_account.Count;
         }
         #endregion
 
@@ -171,7 +176,7 @@ namespace dc
             if (leave_count <= 0 || list.Count <= 0) return;
 
             ///如果超过总缓存，再释放最近离线玩家
-            if (m_chache_account.Count <= GlobalID.MAX_CACHE_ACCOUNT_COUNT) return;
+            if (m_cache_account.Count <= GlobalID.MAX_CACHE_ACCOUNT_COUNT) return;
 
             ///3天前的数据
             leave_count = leave_count - ReleaseOffline(list, 3, leave_count);
@@ -187,7 +192,7 @@ namespace dc
         private List<CacheAccountData> CollectOffline()
         {
             List<CacheAccountData> list = new List<CacheAccountData>();
-            foreach (var obj in m_chache_account)
+            foreach (var obj in m_cache_account)
             {
                 if (obj.Value.logout_time > 0)
                     list.Add(obj.Value);

@@ -148,6 +148,7 @@ namespace dc
             PacketPools.ToString(true);
             ObjectPools.ToString(true);
             CommonObjectPools.ToString(true);
+            Console.WriteLine("缓存账号数量:" + AccountCacheManager.Instance.GetCacheCount());
         }
         /// <summary>
         /// 在线人数统计

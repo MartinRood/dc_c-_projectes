@@ -40,6 +40,8 @@ namespace dc
     public class ServerNetInfo
     {
         public int log_level;
+        public byte connect_gl; //是否需要连global
+        public byte connect_fs; //是否需要连fight
         public ushort server_uid;//本区服务器唯一id
         public string ws_ip;
         public ushort ws_port;

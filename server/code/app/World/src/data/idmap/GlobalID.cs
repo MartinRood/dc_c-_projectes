@@ -27,10 +27,10 @@ namespace dc
         /// <summary>
         /// 最大缓存账号数据
         /// </summary>
-        public static int MAX_CACHE_ACCOUNT_COUNT = 10000;
+        public static int MAX_CACHE_ACCOUNT_COUNT = 100000;
         /// <summary>
         /// 单次最多回收的账号数量
         /// </summary>
-        public static int TOTAL_RELEASE_CACHE_ACCOUNT_PER = 100;
+        public static int TOTAL_RELEASE_CACHE_ACCOUNT_PER = 1000;
     }
 }
