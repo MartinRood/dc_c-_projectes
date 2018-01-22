@@ -14,7 +14,7 @@ namespace dc
     {
         private Dictionary<long, Unit> m_cache_units = null;//所有单位集合
         private Dictionary<string, long> m_name_units;//姓名->角色
-        private Dictionary<long, long> m_account_units = null;//账号对应的unit
+        private Dictionary<long, long> m_account_units = null;//账号->角色
 
         public UnitManager()
         {

@@ -43,7 +43,14 @@ namespace dc
             info.type = EventID;
 		    if (m_dispathcerMap.ContainsKey(EventID) && m_dispathcerMap[EventID] != null)
 		    {
-			    m_dispathcerMap[EventID](info);
+                try
+                {
+                    m_dispathcerMap[EventID](info);
+                }
+                catch(Exception e)
+                {
+                    Log.Exception(e);
+                }
 		    }
 	    }
         static public GameEvent m_DefaultGameEvent = new GameEvent();
@@ -53,7 +60,14 @@ namespace dc
             m_DefaultGameEvent.type = EventID;
             if (m_dispathcerMap.ContainsKey(EventID) && m_dispathcerMap[EventID] != null)
             {
-                m_dispathcerMap[EventID](m_DefaultGameEvent);
+                try
+                {
+                    m_dispathcerMap[EventID](m_DefaultGameEvent);
+                }
+                catch (Exception e)
+                {
+                    Log.Exception(e);
+                }
             }
         }
         public void Cleanup()

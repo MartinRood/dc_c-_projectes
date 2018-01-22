@@ -59,7 +59,7 @@ namespace dc
         }
         public void CloseAll()
         {
-            lock (m_sync_lock)
+            //lock (m_sync_lock)
             {
                 while (m_sockets.Count > 0)
                 {
@@ -132,7 +132,7 @@ namespace dc
         /*～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～事件～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～*/
         private void OnAcceptConnect(long conn_idx)
         {
-            lock (m_sync_lock)
+            //lock (m_sync_lock)
             {
                 m_sockets.Add(conn_idx);
             }
@@ -143,7 +143,7 @@ namespace dc
         }
         private void OnConnectClose(long conn_idx)
         {
-            lock (m_sync_lock)
+            //lock (m_sync_lock)
             {
                 m_sockets.Remove(conn_idx);
             }
