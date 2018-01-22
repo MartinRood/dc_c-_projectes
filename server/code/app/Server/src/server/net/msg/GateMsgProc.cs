@@ -268,21 +268,8 @@ namespace dc
             {//如果在加载完角色信息前退出，则不会有unit
                 return;
             }
-
-            //告诉fs
-            ss2fs.LogoutClient fs_msg = PacketPools.Get(ss2fs.msg.LOGOUT_CLIENT) as ss2fs.LogoutClient;
-            fs_msg.char_idx = player.char_idx;
-            ServerNetManager.Instance.Send2FS(player.fs_uid, fs_msg);
-
-            //告诉ws
-            ss2ws.LogoutClient ws_msg = PacketPools.Get(ss2ws.msg.LOGOUT_CLIENT) as ss2ws.LogoutClient;
-            ws_msg.char_idx = player.char_idx;
-            ServerNetManager.Instance.Send2WS(ws_msg);
-
-            //告诉gl
-            ss2gl.LogoutClient gl_msg = PacketPools.Get(ss2gl.msg.LOGOUT_CLIENT) as ss2gl.LogoutClient;
-            gl_msg.char_idx = player.char_idx;
-            ServerNetManager.Instance.Send2GL(gl_msg);
+            long char_idx = player.char_idx;
+            ushort fs_uid = player.fs_uid;
 
             //从场景移除
             BaseScene scene = SceneManager.Instance.GetScene(player.scene_obj_idx);
@@ -292,6 +279,22 @@ namespace dc
             }
             //从管理器移除
             UnitManager.Instance.RemoveUnit(player);
+
+
+            //告诉fs
+            ss2fs.LogoutClient fs_msg = PacketPools.Get(ss2fs.msg.LOGOUT_CLIENT) as ss2fs.LogoutClient;
+            fs_msg.char_idx = char_idx;
+            ServerNetManager.Instance.Send2FS(fs_uid, fs_msg);
+
+            //告诉ws
+            ss2ws.LogoutClient ws_msg = PacketPools.Get(ss2ws.msg.LOGOUT_CLIENT) as ss2ws.LogoutClient;
+            ws_msg.char_idx = char_idx;
+            ServerNetManager.Instance.Send2WS(ws_msg);
+
+            //告诉gl
+            ss2gl.LogoutClient gl_msg = PacketPools.Get(ss2gl.msg.LOGOUT_CLIENT) as ss2gl.LogoutClient;
+            gl_msg.char_idx = char_idx;
+            ServerNetManager.Instance.Send2GL(gl_msg);
         }
         #endregion
 
