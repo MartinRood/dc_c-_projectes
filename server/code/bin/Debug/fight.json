@@ -4,5 +4,5 @@
     "ws_ip":"127.0.0.1",
 	"ws_port":18000,
 	"ip_for_server":"127.0.0.1",
-	"port_for_server":10001
+	"port_for_server":10002
 }
