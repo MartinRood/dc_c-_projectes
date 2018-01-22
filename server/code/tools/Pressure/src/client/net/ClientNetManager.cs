@@ -15,7 +15,6 @@ namespace dc
         private int m_send_msg_size = 0;
         private int m_recv_msg_size = 0;
         private ByteArray m_send_by = null;
-        private object m_sync_lock = new object();
         private List<long> m_sockets = new List<long>();
         //需要创建数量
         private sConnectInfo m_connect_info = new sConnectInfo();
@@ -59,15 +58,12 @@ namespace dc
         }
         public void CloseAll()
         {
-            //lock (m_sync_lock)
+            while (m_sockets.Count > 0)
             {
-                while (m_sockets.Count > 0)
-                {
-                    NetConnectManager.Instance.Disconnect(m_sockets[0]);
-                    System.Threading.Thread.Sleep(5);
-                }
-                m_sockets.Clear();
+                NetConnectManager.Instance.Disconnect(m_sockets[0]);
+                System.Threading.Thread.Sleep(5);
             }
+            m_sockets.Clear();
             ResetRecvSendPacket();
         }
         /// <summary>
@@ -132,10 +128,7 @@ namespace dc
         /*～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～事件～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～*/
         private void OnAcceptConnect(long conn_idx)
         {
-            //lock (m_sync_lock)
-            {
-                m_sockets.Add(conn_idx);
-            }
+            m_sockets.Add(conn_idx);
             c2gs.EncryptInfo msg = PacketPools.Get(c2gs.msg.ENCRYPT) as c2gs.EncryptInfo;
             msg.version = 1;
             this.Send(conn_idx, msg);
@@ -143,10 +136,7 @@ namespace dc
         }
         private void OnConnectClose(long conn_idx)
         {
-            //lock (m_sync_lock)
-            {
-                m_sockets.Remove(conn_idx);
-            }
+            m_sockets.Remove(conn_idx);
             EventController.TriggerEvent(ClientEventID.NET_CONNECTED_CLOSE, conn_idx);
         }
         private void OnMessageReveived(long conn_idx, ushort header, ByteArray data)
