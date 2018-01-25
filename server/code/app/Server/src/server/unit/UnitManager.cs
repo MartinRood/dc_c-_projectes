@@ -12,19 +12,23 @@ namespace dc
     /// </summary>
     public class UnitManager : Singleton<UnitManager>
     {
+        private List<ClientUID> m_client_sessions;//会话
+
+        private List<long> m_players;//所有玩家列表
         private Dictionary<long, Unit> m_units;//所有单位集合
         private Dictionary<string, long> m_name_players;//姓名->角色
         private Dictionary<long, long> m_account_players;//账号->角色
         private Dictionary<ClientUID, long> m_client_players;//client_uid->角色
-        private List<long> m_players;//所有玩家列表
 
         public UnitManager()
         {
+            m_client_sessions = new List<ClientUID>();
+
+            m_players = new List<long>();
             m_units = new Dictionary<long,Unit>();
             m_name_players = new Dictionary<string, long>();
             m_account_players = new Dictionary<long, long>();
             m_client_players = new Dictionary<ClientUID, long>();
-            m_players = new List<long>();
         }
 
         public void Setup()
@@ -39,6 +43,7 @@ namespace dc
             }
             m_units.Clear();
             m_client_players.Clear();
+            m_client_sessions.Clear();
         }
         public void Tick()
         {
@@ -102,8 +107,10 @@ namespace dc
             unit.OnEnter();
             return true;
         }
+        static private int loginout_count = 0;
         public void RemoveUnit(Unit unit)
         {
+            Log.Debug("登出数量2:" + ++loginout_count);
             if (unit == null) return;
             unit.OnLeave();
             if (unit is Player)
@@ -133,6 +140,22 @@ namespace dc
         public bool HasUnit(long idx)
         {
             return m_units.ContainsKey(idx);
+        }
+        #endregion
+
+        #region 会话
+        public void AddSession(ClientUID client_uid)
+        {
+            if (!m_client_sessions.Contains(client_uid))
+                m_client_sessions.Add(client_uid);
+        }
+        public void RemoveSession(ClientUID client_uid)
+        {
+            m_client_sessions.Remove(client_uid);
+        }
+        public bool HadSession(ClientUID client_uid)
+        {
+            return m_client_sessions.Contains(client_uid);
         }
         #endregion
 

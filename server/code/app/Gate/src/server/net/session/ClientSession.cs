@@ -82,6 +82,7 @@ namespace dc
                 return 0;
             return ForServerNetManager.Instance.Send(m_ss_uid, packet);
         }
+        static private int loginout_count = 0;
         /// <summary>
         /// 主动登出，或异常退出
         /// </summary>
@@ -89,11 +90,12 @@ namespace dc
         {
             if (m_session_status == eSessionStatus.LOGOUTING) return;
             m_session_status = eSessionStatus.LOGOUTING;
-
+            Log.Debug("登出数量:" + ++loginout_count);
             //发送到ss,登出
             if(m_account_idx > 0)
             {
                 gs2ss.LogoutAccount ss_msg = PacketPools.Get(gs2ss.msg.LOGOUT_ACCOUNT) as gs2ss.LogoutAccount;
+                ss_msg.client_uid = m_client_uid;
                 ss_msg.account_idx = m_account_idx;
                 this.Send2SS(ss_msg);
             }
@@ -111,6 +113,7 @@ namespace dc
             if (m_account_idx > 0)
             {//说明已经登录到ss，需要清理
                 gs2ss.KickoutAccount msg = PacketPools.Get(gs2ss.msg.KICK_ACCOUNT) as gs2ss.KickoutAccount;
+                msg.client_uid = m_client_uid;
                 msg.account_idx = m_account_idx;
                 this.Send2SS(msg);
             }

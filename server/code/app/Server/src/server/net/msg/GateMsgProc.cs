@@ -182,6 +182,7 @@ namespace dc
             gs2ss.EnterGame msg = packet as gs2ss.EnterGame;
             ClientUID client_uid = msg.client_uid;
             InterServerID server_uid = msg.server_uid;
+            UnitManager.Instance.AddSession(client_uid);
 
             if (!UnitManager.Instance.HasUnit(msg.char_idx))
             {
@@ -190,8 +191,8 @@ namespace dc
                 PlayerInfoForSS ss_data = CommonObjectPools.Spawn<PlayerInfoForSS>();
                 SQLCharHandle.QueryCharacterInfo(msg.char_idx, db_id, ss_data, is_load =>
                 {
-                    if(is_load)
-                    {
+                    if(is_load && UnitManager.Instance.HadSession(client_uid))
+                    {//读取玩数据，有可能已经退出
                         //创建玩家
                         Player player = new Player();
                         player.client_uid = client_uid;
@@ -242,13 +243,16 @@ namespace dc
             rep_msg.length = msg.length;
             this.Send(rep_msg);
         }
+        static private int loginout_count = 0;
         /// <summary>
         /// 账号登出
         /// </summary>
         private void OnLogoutAccount(PacketBase packet)
         {
+            Log.Debug("登出数量1:" + ++loginout_count);
             gs2ss.LogoutAccount msg = packet as gs2ss.LogoutAccount;
-            HandleLogoutAccount(msg.account_idx);
+            HandleLogoutAccount(msg.client_uid);
+            UnitManager.Instance.RemoveSession(msg.client_uid);
         }
         /// <summary>
         /// 踢号
@@ -256,14 +260,15 @@ namespace dc
         private void OnKickAccount(PacketBase packet)
         {
             gs2ss.KickoutAccount msg = packet as gs2ss.KickoutAccount;
-            HandleLogoutAccount(msg.account_idx);
+            HandleLogoutAccount(msg.client_uid);
+            UnitManager.Instance.RemoveSession(msg.client_uid);
         }
         /// <summary>
         /// 处理登出逻辑
         /// </summary>
-        private void HandleLogoutAccount(long account_idx)
+        private void HandleLogoutAccount(ClientUID client_uid)
         {
-            Player player = UnitManager.Instance.GetPlayerByAccount(account_idx) as Player;
+            Player player = UnitManager.Instance.GetPlayerByClientUID(client_uid) as Player;
             if (player == null)
             {//如果在加载完角色信息前退出，则不会有unit
                 return;

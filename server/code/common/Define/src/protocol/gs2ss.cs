@@ -113,15 +113,18 @@ namespace dc.gs2ss
     /// </summary>
     public class LogoutAccount : PackBaseS2S
     {
+        public ClientUID client_uid;
         public long account_idx;
         public override void Read(ByteArray by)
         {
             base.Read(by);
+            client_uid.Read(by);
             account_idx = by.ReadLong();
         }
         public override void Write(ByteArray by)
         {
             base.Write(by);
+            client_uid.Write(by);
             by.WriteLong(account_idx);
         }
     }
@@ -131,15 +134,18 @@ namespace dc.gs2ss
     /// </summary>
     public class KickoutAccount : PackBaseS2S
     {
+        public ClientUID client_uid;
         public long account_idx;
         public override void Read(ByteArray by)
         {
             base.Read(by);
+            client_uid.Read(by);
             account_idx = by.ReadLong();
         }
         public override void Write(ByteArray by)
         {
             base.Write(by);
+            client_uid.Write(by);
             by.WriteLong(account_idx);
         }
     }
